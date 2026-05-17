@@ -2,7 +2,10 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
 <title>The Wolf of BBVA</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -479,11 +482,11 @@ function refreshUI() {
 
 // ── BOOT ──────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
-  startListeners();
-  setTimeout(() => {
-    document.getElementById('loading-overlay').style.display = 'none';
-    document.getElementById('login-screen').style.display   = 'flex';
-  }, 1200);
+  // Mostrar login inmediatamente sin esperar Firebase
+  document.getElementById('loading-overlay').style.display = 'none';
+  document.getElementById('login-screen').style.display   = 'flex';
+  // Conectar Firebase en background
+  try { startListeners(); } catch(e) { console.warn('Firebase:', e); }
 });
 
 // ── LOGIN ──────────────────────────────────────────────────────────────
@@ -872,14 +875,4 @@ window.applyBonus = async function(playerName, idx) {
 window.resetAll = async function() {
   if (!currentUser?.isAdmin) return;
   if (!confirm('⚠️ ¿Borrar TODOS los jugadores, partidas y puntos?\n\nEsta acción es IRREVERSIBLE.')) return;
-  if (!confirm('Segunda confirmación: ¿Segura que querés borrar todo?')) return;
-  await db.ref('players').remove();
-  await db.ref('history').remove();
-  await db.ref('bonus').remove();
-};
-
-// ── UTILS ──────────────────────────────────────────────────────────────
-function showAlert(el, msg, type) {
-  if (!el) return;
-  el.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
-  setTimeout(() =
+  if (!confirm('Segunda confir
