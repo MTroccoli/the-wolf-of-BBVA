@@ -421,10 +421,10 @@
   </div>
 </div>
 
-<!-- FIREBASE SDK -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, set, push, remove, onValue, off } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+<!-- FIREBASE SDK (compat - máxima compatibilidad mobile) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
 
 // ── CONFIG ──────────────────────────────────────────────────────────
 const firebaseConfig = {
@@ -437,8 +437,8 @@ const firebaseConfig = {
   appId: "1:415214001962:web:67a42a6aa526e996414853"
 };
 
-const fbApp = initializeApp(firebaseConfig);
-const db    = getDatabase(fbApp);
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
 // ── AUTH ─────────────────────────────────────────────────────────────
 const ADMIN_USER  = 'admin';
@@ -454,28 +454,15 @@ let bonusPoints = {};   // { uid: { name, pts } }
 
 // ── LISTENERS FIREBASE ────────────────────────────────────────────────
 function startListeners() {
-  // Jugadores
-  onValue(ref(db, 'players'), snap => {
-    players = snap.val() || {};
-    refreshUI();
-  });
-  // Historial
-  onValue(ref(db, 'history'), snap => {
-    history = snap.val() || {};
-    refreshUI();
-  });
-  // Bonus
-  onValue(ref(db, 'bonus'), snap => {
-    bonusPoints = snap.val() || {};
-    refreshUI();
-  });
-  // Conexión
-  onValue(ref(db, '.info/connected'), snap => {
+  db.ref('players').on('value', snap => { players = snap.val() || {}; refreshUI(); });
+  db.ref('history').on('value', snap => { history = snap.val() || {}; refreshUI(); });
+  db.ref('bonus').on('value',   snap => { bonusPoints = snap.val() || {}; refreshUI(); });
+  db.ref('.info/connected').on('value', snap => {
     const connected = snap.val();
-    const dot  = document.getElementById('sync-dot');
-    const txt  = document.getElementById('sync-text');
-    if (dot)  dot.classList.toggle('off', !connected);
-    if (txt)  txt.textContent = connected ? 'EN VIVO' : 'SIN CONEXIÓN';
+    const dot = document.getElementById('sync-dot');
+    const txt = document.getElementById('sync-text');
+    if (dot) dot.classList.toggle('off', !connected);
+    if (txt) txt.textContent = connected ? 'EN VIVO' : 'SIN CONEXIÓN';
   });
 }
 
@@ -518,7 +505,7 @@ window.doLogin = function() {
     // Registrar jugador si no existe
     const exists = Object.values(players).some(p => p.name.toLowerCase() === name.toLowerCase());
     if (!exists) {
-      push(ref(db, 'players'), { name });
+      db.ref('players').push({ name });
     }
     bootApp(); return;
   }
@@ -685,7 +672,7 @@ window.saveGame = async function() {
   }
 
   const gameNames = {kittens:'🐱 Exploding Kittens', saboteur:'⛏️ Saboteur', bahamas:'✈️ Bahamas'};
-  await push(ref(db, 'history'), {
+  await db.ref('history').push({
     game: gameNames[game], results, by: currentUser.name,
     ts: new Date().toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit'})
   });
@@ -715,7 +702,7 @@ function renderHistory() {
 window.deleteGame = async function(uid) {
   if (!currentUser?.isAdmin) return;
   if (!confirm('¿Eliminar esta partida?')) return;
-  await remove(ref(db, 'history/' + uid));
+  await db.ref('history/' + uid).remove();
 };
 
 // ── RANKING ────────────────────────────────────────────────────────────
@@ -865,10 +852,9 @@ function renderAdmin() {
 window.removePlayer = async function(uid, name) {
   if (!currentUser?.isAdmin) return;
   if (!confirm(`¿Eliminar a ${name} de la jornada?\n\nSus resultados en partidas previas se conservan.`)) return;
-  await remove(ref(db, 'players/' + uid));
-  // Limpiar bonus si existe
+  await db.ref('players/' + uid).remove();
   const bEntry = Object.entries(bonusPoints).find(([k,v]) => v.name === name);
-  if (bEntry) await remove(ref(db, 'bonus/' + bEntry[0]));
+  if (bEntry) await db.ref('bonus/' + bEntry[0]).remove();
 };
 
 window.applyBonus = async function(playerName, idx) {
@@ -876,9 +862,9 @@ window.applyBonus = async function(playerName, idx) {
   // buscar si ya existe entrada
   const existing = Object.entries(bonusPoints).find(([k,v]) => v.name === playerName);
   if (existing) {
-    await set(ref(db, 'bonus/' + existing[0]), { name: playerName, pts: val });
+    await db.ref('bonus/' + existing[0]).set({ name: playerName, pts: val });
   } else {
-    await push(ref(db, 'bonus'), { name: playerName, pts: val });
+    await db.ref('bonus').push({ name: playerName, pts: val });
   }
   showAlert(document.getElementById('admin-pts-alert'), `Puntos de ${playerName} ajustados a ${val>0?'+':''}${val} extra. ✔`, 'success');
 };
@@ -887,10 +873,13 @@ window.resetAll = async function() {
   if (!currentUser?.isAdmin) return;
   if (!confirm('⚠️ ¿Borrar TODOS los jugadores, partidas y puntos?\n\nEsta acción es IRREVERSIBLE.')) return;
   if (!confirm('Segunda confirmación: ¿Segura que querés borrar todo?')) return;
-  await remove(ref(db, 'players'));
-  await remove(ref(db, 'history'));
-  await remove(ref(db, 'bonus'));
+  await db.ref('players').remove();
+  await db.ref('history').remove();
+  await db.ref('bonus').remove();
 };
 
 // ── UTILS ──────────────────────────────────────────────────────────────
-f
+function showAlert(el, msg, type) {
+  if (!el) return;
+  el.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+  setTimeout(() =
