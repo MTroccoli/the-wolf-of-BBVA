@@ -269,33 +269,257 @@
 
   <!-- REGLAS -->
   <div class="panel" id="panel-reglas">
-    <div class="card">
-      <div class="card-title"><span>🐱</span> Exploding Kittens</div>
-      <div class="rule-row"><span>1º Puesto — Ganador absoluto</span><span class="rule-pts">10 PTS</span></div>
-      <div class="rule-row"><span>2º Puesto — El último en explotar</span><span class="rule-pts">6 PTS</span></div>
-      <div class="rule-row"><span>3º Puesto</span><span class="rule-pts">4 PTS</span></div>
-      <div class="rule-row"><span>Resto de eliminados</span><span class="rule-pts">2 PTS</span></div>
-      <div class="rule-row"><span style="color:var(--green)">⚡ Bonus "Venganza"</span><span class="rule-pts" style="color:var(--green)">+1 PT</span></div>
+
+    <!-- EXPLODING KITTENS -->
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAccordion('ek')">
+        <span>🐱 Exploding Kittens — Full Party Pack</span>
+        <span class="accordion-arrow" id="arrow-ek">▼</span>
+      </button>
+      <div class="accordion-body" id="acc-ek" style="display:none">
+
+        <div class="rules-section">
+          <div class="rules-section-title">🎯 Objetivo</div>
+          <p class="rules-text">Ser el último jugador en no explotar. Se juega de 2 a 10 jugadores. El Full Party Pack incluye 120 cartas con ilustraciones del Oatmeal.</p>
+        </div>
+
+        <div class="rules-section">
+          <div class="rules-section-title">🃏 Preparación</div>
+          <p class="rules-text">Sacá todos los <strong>Exploding Kittens</strong> del mazo y ponlos aparte. Según la cantidad de jugadores, usá estas cartas:</p>
+          <div class="rules-table">
+            <div class="rules-table-row header"><span>Jugadores</span><span>Cartas a usar</span></div>
+            <div class="rules-table-row"><span>2-3 jugadores</span><span>Solo las cartas CON huella (44)</span></div>
+            <div class="rules-table-row"><span>4-7 jugadores</span><span>Solo las cartas SIN huella (69)</span></div>
+            <div class="rules-table-row"><span>8-10 jugadores</span><span>Todas las cartas (113)</span></div>
+          </div>
+          <p class="rules-text" style="margin-top:10px">Sacá todos los <strong>Defuse</strong> del mazo y repartí 1 a cada jugador. Los Defuse sobrantes vuelven al mazo. Repartí 7 cartas a cada jugador (quedan 8 con el Defuse). Insertá en el mazo tantos Exploding Kittens como jugadores menos 1. Barajá y ponelo en el centro boca abajo.</p>
+        </div>
+
+        <div class="rules-section">
+          <div class="rules-section-title">🔄 Cómo se juega</div>
+          <p class="rules-text">En tu turno podés jugar todas las cartas que quieras de tu mano, y <strong>al final del turno</strong> (no al principio) robás 1 carta del mazo. Si es un Exploding Kitten y no tenés Defuse... ¡explotaste! El juego sigue en sentido horario. Gana el último en pie.</p>
+        </div>
+
+        <div class="rules-section">
+          <div class="rules-section-title">🃏 Cartas principales</div>
+          <div class="card-list">
+            <div class="card-item"><span class="card-name">💣 Exploding Kitten</span><span class="card-desc">Si lo robás sin Defuse, estás eliminado. Descartás todas tus cartas.</span></div>
+            <div class="card-item"><span class="card-name">🛡️ Defuse</span><span class="card-desc">La única carta que salva de explotar. Jugala y reinsertá el Kitten en el mazo en secreto donde quieras.</span></div>
+            <div class="card-item"><span class="card-name">🚫 Nope</span><span class="card-desc">Cancela la acción de cualquier carta en cualquier momento, incluso fuera de tu turno. Un Nope sobre un Nope = Yup.</span></div>
+            <div class="card-item"><span class="card-name">⚡ Attack</span><span class="card-desc">Terminá tu turno sin robar y obligá al siguiente a tomar 2 turnos seguidos. Si el atacado usa Attack, el siguiente toma 4 turnos.</span></div>
+            <div class="card-item"><span class="card-name">⏭️ Skip</span><span class="card-desc">Terminá tu turno sin robar carta. Usado como defensa contra Attack, solo cancela 1 de los 2 turnos.</span></div>
+            <div class="card-item"><span class="card-name">👀 See the Future</span><span class="card-desc">Mirá en secreto las 3 cartas superiores del mazo, en el mismo orden. No las reordenes.</span></div>
+            <div class="card-item"><span class="card-name">🔮 Alter the Future</span><span class="card-desc">Mirá las 3 cartas superiores del mazo y reordenalas como quieras.</span></div>
+            <div class="card-item"><span class="card-name">🔀 Shuffle</span><span class="card-desc">Barajá el mazo sin mirar las cartas. Útil cuando sabés que viene un Kitten.</span></div>
+            <div class="card-item"><span class="card-name">💝 Favor</span><span class="card-desc">Elegí un jugador que te debe dar 1 carta de su mano (él elige cuál).</span></div>
+            <div class="card-item"><span class="card-name">⬇️ Draw from Bottom</span><span class="card-desc">Robá la carta del fondo del mazo en vez de la de arriba.</span></div>
+            <div class="card-item"><span class="card-name">🐱 Cat Cards (pares)</span><span class="card-desc">Sin poder solas. Jugadas de a 2 iguales: robá 1 carta al azar de otro jugador. De a 3 iguales: pedí una carta específica.</span></div>
+          </div>
+        </div>
+
+        <div class="rules-section">
+          <div class="rules-section-title">🏆 Puntos en la jornada</div>
+          <div class="rule-row"><span>1º Puesto — Ganador absoluto</span><span class="rule-pts">10 PTS</span></div>
+          <div class="rule-row"><span>2º Puesto — El último en explotar</span><span class="rule-pts">6 PTS</span></div>
+          <div class="rule-row"><span>3º Puesto</span><span class="rule-pts">4 PTS</span></div>
+          <div class="rule-row"><span>Resto de eliminados</span><span class="rule-pts">2 PTS</span></div>
+          <div class="rule-row"><span style="color:var(--green)">⚡ Bonus "Venganza": hiciste explotar a tu jefe/gerente</span><span class="rule-pts" style="color:var(--green)">+1 PT</span></div>
+        </div>
+
+        <div class="rules-section">
+          <div class="rules-section-title">❓ FAQ</div>
+          <div class="faq-list">
+            <div class="faq-item"><div class="faq-q">¿Puedo jugar varias cartas en un mismo turno?</div><div class="faq-a">Sí, podés jugar todas las que quieras antes de robar. El orden importa.</div></div>
+            <div class="faq-item"><div class="faq-q">¿El Defuse se descarta después de usarlo?</div><div class="faq-a">Sí, va al descarte. Y el Exploding Kitten vuelve al mazo donde vos quieras, en secreto.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Se puede Nopear un Defuse?</div><div class="faq-a">No. El Defuse y el Exploding Kitten no pueden ser Nopeados.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Qué pasa si se acaba el mazo?</div><div class="faq-a">No puede pasar — hay suficientes Exploding Kittens para eliminar a todos menos 1.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Hay límite de cartas en mano?</div><div class="faq-a">No hay límite ni mínimo. Si te quedás sin cartas seguís jugando.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Cuándo se puede jugar el Nope?</div><div class="faq-a">En cualquier momento, incluso en el turno de otro jugador, antes de que la acción se complete.</div></div>
+          </div>
+        </div>
+
+        <a href="https://www.explodingkittens.com/pages/rules-kittens-party" target="_blank" class="rules-link-btn">📄 Ver reglas oficiales completas →</a>
+      </div>
     </div>
-    <div class="card">
-      <div class="card-title"><span>⛏️</span> Saboteur</div>
-      <div class="rule-row"><span>Equipo Ganador</span><span class="rule-pts">8 PTS</span></div>
-      <div class="rule-row"><span>Equipo Perdedor</span><span class="rule-pts">3 PTS</span></div>
-      <div class="rule-row"><span style="color:var(--green)">⚡ Bonus "Gran Traidor"</span><span class="rule-pts" style="color:var(--green)">+2 PTS</span></div>
+
+    <!-- SABOTEUR -->
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAccordion('sab')">
+        <span>⛏️ Saboteur</span>
+        <span class="accordion-arrow" id="arrow-sab">▼</span>
+      </button>
+      <div class="accordion-body" id="acc-sab" style="display:none">
+
+        <div class="rules-section">
+          <div class="rules-section-title">🎯 Objetivo</div>
+          <p class="rules-text">Los <strong>mineros</strong> deben construir un túnel desde la carta de inicio hasta el tesoro. Los <strong>saboteadores</strong> deben impedirlo. Nadie sabe quién es quién. Se juega en 3 rondas y gana quien acumule más pepitas de oro al final.</p>
+        </div>
+
+        <div class="rules-section">
+          <div class="rules-section-title">🃏 Preparación</div>
+          <p class="rules-text">Distribuí los roles según la cantidad de jugadores:</p>
+          <div class="rules-table">
+            <div class="rules-table-row header"><span>Jugadores</span><span>Mineros</span><span>Saboteadores</span></div>
+            <div class="rules-table-row"><span>3-4</span><span>3-4</span><span>1</span></div>
+            <div class="rules-table-row"><span>5-6</span><span>4-5</span><span>2</span></div>
+            <div class="rules-table-row"><span>7-9</span><span>5-7</span><span>3</span></div>
+            <div class="rules-table-row"><span>10</span><span>7</span><span>3+</span></div>
+          </div>
+          <p class="rules-text" style="margin-top:10px">Cada jugador mira su carta de rol en secreto. Colocá la carta de inicio (escalera) y las 3 cartas de destino boca abajo a 7 espacios de distancia. Solo una tiene el tesoro, las otras dos tienen piedras. Repartí cartas de túnel y acción según la cantidad de jugadores.</p>
+        </div>
+
+        <div class="rules-section">
+          <div class="rules-section-title">🔄 Cómo se juega</div>
+          <p class="rules-text">En tu turno <strong>hacé una de estas 3 acciones</strong> y luego robá una carta del mazo:</p>
+          <div class="card-list">
+            <div class="card-item"><span class="card-name">🗺️ Jugar carta de túnel</span><span class="card-desc">Colocala conectada a otra ya en la mesa. Los túneles deben encajar. Los mineros construyen camino al tesoro; los saboteadores intentan bloquearlo sin ser muy obvios.</span></div>
+            <div class="card-item"><span class="card-name">⚡ Jugar carta de acción</span><span class="card-desc">Afectan a jugadores o al tablero. Ver detalle abajo.</span></div>
+            <div class="card-item"><span class="card-name">🗑️ Descartar</span><span class="card-desc">Si no podés o no querés hacer nada, descartá 1 carta y robá 1.</span></div>
+          </div>
+        </div>
+
+        <div class="rules-section">
+          <div class="rules-section-title">🃏 Cartas de acción</div>
+          <div class="card-list">
+            <div class="card-item"><span class="card-name">🔨 Romper herramienta</span><span class="card-desc">Poné una carta de herramienta rota frente a otro jugador. Ese jugador no puede colocar cartas de túnel hasta que lo reparen. Hay 3 herramientas: pico, linterna y vagoneta.</span></div>
+            <div class="card-item"><span class="card-name">🔧 Reparar herramienta</span><span class="card-desc">Quitá una carta de herramienta rota de cualquier jugador (incluyéndote). Algunas cartas reparan 2 herramientas a la vez.</span></div>
+            <div class="card-item"><span class="card-name">🗺️ Mapa</span><span class="card-desc">Mirá en secreto 1 de las 3 cartas de destino. Podés decir lo que viste o mentir.</span></div>
+            <div class="card-item"><span class="card-name">💥 Derrumbe</span><span class="card-desc">Retirá una carta de túnel ya colocada en la mesa. El túnel se rompe por ahí.</span></div>
+          </div>
+        </div>
+
+        <div class="rules-section">
+          <div class="rules-section-title">🏁 Fin de ronda y distribución del oro</div>
+          <p class="rules-text"><strong>Ganan los mineros</strong> si se completa un camino ininterrumpido hasta el tesoro. El jugador que colocó la última carta elige su pepita, luego pasa las restantes al siguiente minero, y así hasta repartirlas todas.<br><br>
+          <strong>Ganan los saboteadores</strong> si se agota el mazo sin llegar al tesoro. Cada saboteador recibe: 4 pepitas si era 1 solo, 3 pepitas si eran 2-3, 2 pepitas si eran 4.<br><br>
+          Al final de la ronda todos revelan su rol. Se juegan <strong>3 rondas en total</strong>. Gana quien tenga más pepitas sumando las 3 rondas.</p>
+        </div>
+
+        <div class="rules-section">
+          <div class="rules-section-title">🏆 Puntos en la jornada</div>
+          <div class="rule-row"><span>Equipo Ganador (mineros llegan o saboteadores bloquean)</span><span class="rule-pts">8 PTS</span></div>
+          <div class="rule-row"><span>Equipo Perdedor</span><span class="rule-pts">3 PTS</span></div>
+          <div class="rule-row"><span style="color:var(--green)">⚡ Bonus "Gran Traidor": Saboteador ganó sin que nadie sospechara</span><span class="rule-pts" style="color:var(--green)">+2 PTS</span></div>
+        </div>
+
+        <div class="rules-section">
+          <div class="rules-section-title">❓ FAQ</div>
+          <div class="faq-list">
+            <div class="faq-item"><div class="faq-q">¿Cuántos saboteadores hay con 5 jugadores?</div><div class="faq-a">2 saboteadores y 4 mineros. Con 3-4 jugadores puede no haber ningún saboteador.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Un saboteador puede reparar herramientas?</div><div class="faq-a">Sí, para no levantar sospechas. El arte del saboteador es parecer un buen minero.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Puedo tener más de una herramienta rota?</div><div class="faq-a">Sí. Si tenés 2 herramientas rotas necesitás 2 reparaciones. No podés colocar túneles hasta estar completamente reparado.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Qué pasa si nadie llega al tesoro y no había saboteadores?</div><div class="faq-a">No se reparte oro a nadie esa ronda.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Se puede mirar tu propia carta de rol?</div><div class="faq-a">Sí, en cualquier momento. La tenés boca abajo frente a vos y solo vos la ves.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Las cartas de pepitas se muestran durante el juego?</div><div class="faq-a">No, se mantienen en secreto hasta el final de la partida (las 3 rondas).</div></div>
+          </div>
+        </div>
+
+        <a href="https://xelu.net/pdf/jocs/saboteur.pdf" target="_blank" class="rules-link-btn">📄 Ver reglas oficiales completas →</a>
+      </div>
     </div>
-    <div class="card">
-      <div class="card-title"><span>✈️</span> Bahamas</div>
-      <div class="rule-row"><span>Ganador — Más dinero</span><span class="rule-pts">10 PTS</span></div>
-      <div class="rule-row"><span>Sobreviviente</span><span class="rule-pts">5 PTS</span></div>
-      <div class="rule-row"><span>Eliminado</span><span class="rule-pts">2 PTS</span></div>
+
+    <!-- BAHAMAS -->
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAccordion('bah')">
+        <span>✈️ Bahamas</span>
+        <span class="accordion-arrow" id="arrow-bah">▼</span>
+      </button>
+      <div class="accordion-body" id="acc-bah" style="display:none">
+
+        <div class="rules-section">
+          <div class="rules-section-title">🎯 Objetivo</div>
+          <p class="rules-text">Acumular la mayor cantidad de dinero y tener al menos un paracaídas para sobrevivir al salto. Se juega de 4 a 8 jugadores en aproximadamente 30 minutos.</p>
+        </div>
+
+        <div class="rules-section">
+          <div class="rules-section-title">🎲 Preparación</div>
+          <p class="rules-text">Repartí un personaje al azar a cada jugador. Preparás los 7 dados, las cartas de paracaídas, falsos paracaídas, la placa del agente y los mazos de acción y botín (la cantidad varía según jugadores). Insertá la carta de caída entre las últimas 4 cartas del mazo de acción. Cada jugador roba 1 carta inicial, 1 de acción y 2 de botín.</p>
+        </div>
+
+        <div class="rules-section">
+          <div class="rules-section-title">🔄 Cómo se juega</div>
+          <p class="rules-text">Un jugador tira los 7 dados. En orden, cada jugador elige 1 dado y realiza su acción. El que elige último no puede tomar ningún dado y será quien tire en la siguiente ronda.</p>
+          <div class="card-list">
+            <div class="card-item"><span class="card-name">📦 Robar carta de acción</span><span class="card-desc">Tomás la carta superior del mazo de acción. ¡Ojo! Si tenés más de 4 cartas de acción debés descartar hasta quedarte con 4.</span></div>
+            <div class="card-item"><span class="card-name">💰 Robar carta de botín</span><span class="card-desc">Tomás una bolsa del mazo de botín (desde $100.000 hasta $500.000).</span></div>
+            <div class="card-item"><span class="card-name">🎭 Habilidad especial</span><span class="card-desc">Usás la habilidad única de tu personaje.</span></div>
+            <div class="card-item"><span class="card-name">🦹 Robar carta de acción a otro</span><span class="card-desc">Le sacás una carta de acción al azar a otro jugador.</span></div>
+            <div class="card-item"><span class="card-name">💸 Robar carta de botín a otro</span><span class="card-desc">Le sacás una carta de botín al azar a otro jugador.</span></div>
+          </div>
+        </div>
+
+        <div class="rules-section">
+          <div class="rules-section-title">🎭 Personajes y habilidades</div>
+          <div class="card-list">
+            <div class="card-item"><span class="card-name">👑 El Jefe</span><span class="card-desc">Realiza la acción que quiera del dado, sin importar lo que salió.</span></div>
+            <div class="card-item"><span class="card-name">👩 Jenn</span><span class="card-desc">Roba 3 cartas de botín, se queda 1 y descarta las otras 2.</span></div>
+            <div class="card-item"><span class="card-name">👩 Joana</span><span class="card-desc">Roba 3 cartas de acción del mazo, se queda 1 y devuelve 2 al mazo.</span></div>
+            <div class="card-item"><span class="card-name">👩 Julia</span><span class="card-desc">Mira 2 cartas de botín de un jugador y le quita una.</span></div>
+            <div class="card-item"><span class="card-name">👩 Lucy</span><span class="card-desc">Toma 2 cartas de acción de un rival, se queda una y le devuelve la otra.</span></div>
+            <div class="card-item"><span class="card-name">👨 Mario</span><span class="card-desc">Cualquier jugador debe darle una carta de botín y una de acción.</span></div>
+            <div class="card-item"><span class="card-name">👩 Mary</span><span class="card-desc">Roba una carta de acción y una de botín de sus respectivos mazos.</span></div>
+            <div class="card-item"><span class="card-name">👨 Nick</span><span class="card-desc">Mira todas las cartas de acción de un jugador y le quita la que quiera, dándole una de botín a cambio.</span></div>
+            <div class="card-item"><span class="card-name">👨 Piero</span><span class="card-desc">Mira todas las cartas de botín de otro jugador, descarta una, y roba una del mazo de botín.</span></div>
+            <div class="card-item"><span class="card-name">👨 Tito</span><span class="card-desc">Mira las cartas de acción de un rival, descarta cualquiera (salvo paracaídas) y roba una del mazo de acción.</span></div>
+          </div>
+        </div>
+
+        <div class="rules-section">
+          <div class="rules-section-title">🏁 Fin de partida</div>
+          <p class="rules-text">La partida termina de dos formas:<br><br>
+          <strong>🕵️ Victoria por FBI:</strong> Si un jugador tiene las 3 cartas diferentes del agente del FBI al terminar su turno, gana automáticamente.<br><br>
+          <strong>🪂 Carta de caída:</strong> Cuando aparece entre las cartas de acción, la partida termina de inmediato. Los jugadores que tengan un paracaídas (verdadero) o bote salvavidas cuentan su dinero — el más rico gana. Los que no tienen paracaídas quedan eliminados.</p>
+        </div>
+
+        <div class="rules-section">
+          <div class="rules-section-title">🏆 Puntos en la jornada</div>
+          <div class="rule-row"><span>Ganador — Más dinero al final</span><span class="rule-pts">10 PTS</span></div>
+          <div class="rule-row"><span>Sobreviviente — Con paracaídas o bote, menos dinero</span><span class="rule-pts">5 PTS</span></div>
+          <div class="rule-row"><span>Eliminado — Sin paracaídas</span><span class="rule-pts">2 PTS</span></div>
+        </div>
+
+        <div class="rules-section">
+          <div class="rules-section-title">❓ FAQ</div>
+          <div class="faq-list">
+            <div class="faq-item"><div class="faq-q">¿Qué pasa si no tengo paracaídas cuando cae la carta de caída?</div><div class="faq-a">Quedás eliminado y no contás tu dinero. Necesitás paracaídas real (no falso) o bote salvavidas para sobrevivir.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Qué es un falso paracaídas?</div><div class="faq-a">Una carta que parece paracaídas pero no sirve para sobrevivir al salto. ¡Cuidado con el bluff!</div></div>
+            <div class="faq-item"><div class="faq-q">¿Puedo tener más de 4 cartas de acción?</div><div class="faq-a">No. Si al robar superás 4, debés descartar hasta quedarte con exactamente 4.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Las cartas del FBI se pueden robar?</div><div class="faq-a">Sí, son cartas de acción normales y pueden ser robadas por otros jugadores.</div></div>
+            <div class="faq-item"><div class="faq-q">¿El que tira los dados puede elegir primero?</div><div class="faq-a">Sí, el lanzador elige primero. El que queda sin dado disponible tira en la siguiente ronda.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Qué pasa si varios jugadores tienen paracaídas y el mismo dinero?</div><div class="faq-a">Empatan. Para la jornada, ambos reciben 5 puntos de sobreviviente.</div></div>
+          </div>
+        </div>
+
+        <a href="https://www.tranjis.com/bahamas" target="_blank" class="rules-link-btn">📄 Ver reglas oficiales completas →</a>
+      </div>
     </div>
-    <div class="card" style="border-color:rgba(46,127,217,0.4)">
-      <div class="card-title"><span>🏆</span> Rangos Financieros</div>
-      <div class="rule-row"><span><span class="rang-badge rang-wolf">The Wolf of BBVA</span></span><span style="font-size:12px;color:var(--muted)">Top 1 al 3</span></div>
-      <div class="rule-row"><span><span class="rang-badge rang-alto">Activo de Alto Rendimiento</span></span><span style="font-size:12px;color:var(--muted)">Mitad superior</span></div>
-      <div class="rule-row"><span><span class="rang-badge rang-moderado">Fondo Común Moderado</span></span><span style="font-size:12px;color:var(--muted)">Mitad inferior</span></div>
-      <div class="rule-row"><span><span class="rang-badge rang-default">En Default (¡Pero con aguante!)</span></span><span style="font-size:12px;color:var(--muted)">Últimos 25%</span></div>
+
+    <!-- PREGUNTAS DE JUGADORES -->
+    <div class="card" style="margin-top:16px">
+      <div class="card-title"><span>💬</span> Preguntas de jugadores</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px">¿Tenés una duda sobre algún juego? Mandala acá y el admin la responde.</p>
+
+      <div style="display:grid;gap:10px;margin-bottom:12px">
+        <div>
+          <div class="form-label">Juego</div>
+          <select id="faq-game">
+            <option value="Exploding Kittens">🐱 Exploding Kittens</option>
+            <option value="Saboteur">⛏️ Saboteur</option>
+            <option value="Bahamas">✈️ Bahamas</option>
+          </select>
+        </div>
+        <div>
+          <div class="form-label">Tu pregunta</div>
+          <textarea id="faq-question" rows="2" placeholder="Ej: ¿Puedo usar dos Skip seguidos?" style="background:rgba(255,255,255,0.05);border:1px solid rgba(46,127,217,0.25);border-radius:8px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;width:100%;resize:none"></textarea>
+        </div>
+      </div>
+      <div id="faq-alert"></div>
+      <button class="btn btn-primary" onclick="submitFaq()" style="width:100%;margin-top:4px">📨 ENVIAR PREGUNTA</button>
+
+      <div class="section-label" style="margin-top:20px">Preguntas enviadas</div>
+      <div id="faq-list"><div style="color:var(--muted);font-size:13px;text-align:center;padding:20px">No hay preguntas aún.</div></div>
     </div>
+
   </div>
 
   <!-- ADMIN -->
