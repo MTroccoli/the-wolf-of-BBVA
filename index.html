@@ -159,11 +159,118 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   .loading-text { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
 
-  @media (max-width: 580px) {
-    .player-position-row { grid-template-columns: 1fr; }
-    .pos-select { width: 100%; }
-    header { flex-direction: column; align-items: flex-start; }
+  /* ── MOBILE RANKING CARDS (ocultas en desktop) ── */
+  .rank-card { display: none; }
+
+  @media (max-width: 640px) {
+    /* APP PADDING */
+    #app { padding: 0 12px 80px; }
+
+    /* HEADER */
+    header { padding: 16px 0 14px; margin-bottom: 14px; gap: 8px; }
+    .logo-area h1 { font-size: 22px; }
+    .logo-area p { font-size: 9px; }
+    .header-right { gap: 5px; }
+    .user-badge { font-size: 9px; padding: 3px 8px; }
+    .admin-badge { font-size: 9px; padding: 3px 7px; }
+    .logout-btn { font-size: 11px; padding: 4px 9px; }
+    .game-count-badge { display: none; }
+    .sync-bar { font-size: 9px; }
+
+    /* LOGIN */
+    .login-box { padding: 32px 22px; border-radius: 14px; }
+    .login-title { font-size: 38px; }
+
+    /* NAV — bottom tab bar fijo */
+    nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      z-index: 50;
+      border-radius: 0;
+      border-left: none; border-right: none; border-bottom: none;
+      border-top: 1px solid var(--border);
+      margin-bottom: 0;
+      padding: 6px 4px;
+      gap: 2px;
+      background: rgba(7,30,61,0.97);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    nav button {
+      flex: 1; min-width: 0;
+      font-size: 10px; padding: 8px 4px;
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      border-radius: 8px;
+      letter-spacing: 0;
+    }
+    nav button .nav-icon { font-size: 18px; line-height: 1; }
+    nav button .nav-label { font-size: 9px; }
+
+    /* CARDS */
+    .card { padding: 14px 16px; border-radius: 10px; margin-bottom: 12px; }
+    .card-title { font-size: 17px; margin-bottom: 12px; }
+
+    /* FORM */
+    .player-position-row {
+      grid-template-columns: 1fr;
+      gap: 8px; padding: 12px;
+    }
+    .pos-select { width: 100%; font-size: 14px; padding: 9px 12px; }
+    .bonus-label { font-size: 13px; }
+
+    /* INPUTS */
+    input[type="text"], input[type="number"], select { font-size: 16px; padding: 12px 14px; } /* 16px evita zoom en iOS */
+
+    /* RANKING: ocultar tabla, mostrar cards */
+    .rank-table-wrap { display: none; }
+    .rank-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(46,127,217,0.12);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+    .rank-card.rank-1 { border-color: rgba(255,209,102,0.35); background: rgba(255,209,102,0.05); }
+    .rank-card.rank-2 { border-color: rgba(192,192,192,0.25); }
+    .rank-card.rank-3 { border-color: rgba(205,127,50,0.25); }
+    .rank-card-pos { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 0.04em; min-width: 36px; text-align: center; }
+    .rank-card.rank-1 .rank-card-pos { color: #FFD166; }
+    .rank-card.rank-2 .rank-card-pos { color: #C0C0C0; }
+    .rank-card.rank-3 .rank-card-pos { color: #CD7F32; }
+    .rank-card-pos-n { color: var(--muted); font-size: 20px; }
+    .rank-card-body { flex: 1; min-width: 0; }
+    .rank-card-name { font-weight: 600; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .rank-card-rang { margin-top: 3px; }
+    .rank-card-right { text-align: right; flex-shrink: 0; }
+    .rank-card-pts { font-family: 'Bebas Neue', sans-serif; font-size: 30px; color: var(--accent); letter-spacing: 0.04em; line-height: 1; }
+    .rank-card-pts-label { font-size: 9px; color: var(--muted); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; }
+    .rank-card-extra { font-size: 10px; color: var(--green); font-family: 'DM Mono', monospace; }
+
+    /* STATS ROW */
+    .rank-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 16px; }
+    .rank-stats .card { padding: 12px; margin-bottom: 0; }
+
+    /* SECTION LABEL */
+    .section-label { font-size: 9px; margin-top: 14px; margin-bottom: 10px; }
+
+    /* RULE ROW */
+    .rule-row { font-size: 12px; padding: 9px 0; flex-wrap: wrap; gap: 4px; }
+    .rule-pts { font-size: 16px; }
+
+    /* HISTORY */
+    .history-results { font-size: 11px; line-height: 1.8; }
+
+    /* ADMIN */
+    .admin-section { padding: 14px; }
+    .player-admin-row { gap: 8px; }
+    .edit-input { width: 60px; }
+
+    /* ALERT */
+    .alert { font-size: 12px; padding: 8px 12px; }
   }
+
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: rgba(46,127,217,0.3); border-radius: 3px; }
@@ -219,11 +326,11 @@
   </header>
 
   <nav>
-    <button class="active" onclick="showPanel('partida',this)">🎮 Registrar</button>
-    <button onclick="showPanel('historial',this)">📋 Historial</button>
-    <button onclick="showPanel('ranking',this)">🏆 Ranking</button>
-    <button onclick="showPanel('reglas',this)">📖 Reglas</button>
-    <button id="admin-nav-btn" onclick="showPanel('admin',this)" style="display:none">⚙️ Admin</button>
+    <button class="active" onclick="showPanel('partida',this)"><span class="nav-icon">🎮</span><span class="nav-label">Registrar</span></button>
+    <button onclick="showPanel('historial',this)"><span class="nav-icon">📋</span><span class="nav-label">Historial</span></button>
+    <button onclick="showPanel('ranking',this)"><span class="nav-icon">🏆</span><span class="nav-label">Ranking</span></button>
+    <button onclick="showPanel('reglas',this)"><span class="nav-icon">📖</span><span class="nav-label">Reglas</span></button>
+    <button id="admin-nav-btn" onclick="showPanel('admin',this)" style="display:none"><span class="nav-icon">⚙️</span><span class="nav-label">Admin</span></button>
   </nav>
 
   <!-- REGISTRAR -->
@@ -640,15 +747,18 @@ function renderRanking() {
   const total  = sorted.length;
   const medals = ['🥇','🥈','🥉'];
 
-  el.innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px">
+  const statsHtml = `
+    <div class="rank-stats">
       ${[['Partidas',hist.length],['Jugadores',total],['Líder',sorted[0]?.[0]||'—']].map(([l,v])=>`
-        <div class="card" style="text-align:center;padding:16px">
-          <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">${l}</div>
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:${l==='Líder'?'20px':'36px'};color:var(--accent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${v}</div>
+        <div class="card" style="text-align:center;padding:12px 8px">
+          <div style="font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">${l}</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:${l==='Líder'?'16px':'28px'};color:var(--accent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.1">${v}</div>
         </div>`).join('')}
-    </div>
-    <div class="card">
+    </div>`;
+
+  // Tabla desktop
+  const tableHtml = `
+    <div class="card rank-table-wrap">
       <table class="rank-table">
         <thead><tr><th>#</th><th>Jugador</th><th>Rango</th><th style="text-align:right">Partidas</th><th style="text-align:right">Bonuses</th><th style="text-align:right">Total</th></tr></thead>
         <tbody>
@@ -671,6 +781,29 @@ function renderRanking() {
         </tbody>
       </table>
     </div>`;
+
+  // Cards mobile
+  const cardsHtml = sorted.map(([name,data],i) => {
+    const rang = getRang(i+1, total);
+    const bEntry = Object.values(bonusPoints).find(b => b.name === name);
+    const extra = bEntry ? bEntry.pts : 0;
+    const posLabel = medals[i] || (i+1)+'º';
+    return `<div class="rank-card rank-${i+1}">
+      <div class="rank-card-pos ${i>=3?'rank-card-pos-n':''}">${posLabel}</div>
+      <div class="rank-card-body">
+        <div class="rank-card-name">${name}</div>
+        <div class="rank-card-rang"><span class="rang-badge rang-${rang.cls}">${rang.label}</span></div>
+        ${extra!==0?`<div class="rank-card-extra">${extra>0?'+'+extra:extra} pts admin</div>`:''}
+      </div>
+      <div class="rank-card-right">
+        <div class="rank-card-pts">${data.pts}</div>
+        <div class="rank-card-pts-label">puntos</div>
+        ${data.bonuses>0?`<div style="font-size:10px;color:var(--green);font-family:'DM Mono',monospace">+${data.bonuses} bonus</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = statsHtml + tableHtml + cardsHtml;
 }
 
 // ── ADMIN ──────────────────────────────────────────────────────────────
