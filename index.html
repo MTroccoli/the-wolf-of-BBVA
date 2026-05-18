@@ -389,7 +389,7 @@
             <div class="rule-row"><span>2º Puesto — El último en explotar</span><span class="rule-pts">6 PTS</span></div>
             <div class="rule-row"><span>3º Puesto</span><span class="rule-pts">4 PTS</span></div>
             <div class="rule-row"><span>Resto de eliminados</span><span class="rule-pts">2 PTS</span></div>
-            <div class="rule-row"><span style="color:var(--green)">⚡ Bonus "Venganza"</span><span class="rule-pts" style="color:var(--green)">+1 PT</span></div>
+            <div class="rule-row"><span style="color:var(--green)">⚡ Bonus "Venganza": lograste hacer explotar a tu jefe o gerente durante la partida</span><span class="rule-pts" style="color:var(--green)">+1 PT</span></div>
           </div>
         </div>
       </div>
@@ -414,43 +414,57 @@
         <button class="accordion-btn open" onclick="toggleAccordion('sab-obj')"><span>🎯 Objetivo y preparación</span><span class="accordion-arrow open" id="arrow-sab-obj">▼</span></button>
         <div class="accordion-body" id="acc-sab-obj">
           <div class="rules-section" style="margin-top:12px">
-            <p class="rules-text">Los <strong>mineros</strong> construyen un túnel hasta el tesoro. Los <strong>saboteadores</strong> lo impiden. Nadie sabe quién es quién. 3 rondas, gana quien acumule más pepitas.</p>
-            <div class="rules-table" style="margin-top:10px">
-              <div class="rules-table-row header"><span>Jugadores</span><span>Mineros</span><span>Saboteadores</span></div>
-              <div class="rules-table-row"><span>3-4</span><span>3-4</span><span>1</span></div>
-              <div class="rules-table-row"><span>5-6</span><span>4-5</span><span>2</span></div>
-              <div class="rules-table-row"><span>7-9</span><span>5-7</span><span>3</span></div>
+            <p class="rules-text">Los <strong>mineros</strong> construyen un túnel hasta el tesoro. Los <strong>saboteadores</strong> lo impiden. Nadie sabe quién es quién.</p>
+            <p class="rules-text" style="margin-top:8px">⭐ <strong>El Egoísta</strong>: es un minero que, si logra ser él quien toca el oro, traiciona a sus compañeros y se queda con todo el premio sin repartir. Sus compañeros mineros no reciben puntos esa ronda — solo él.</p>
+            <div class="rules-table" style="margin-top:12px">
+              <div class="rules-table-row header"><span>Jugadores</span><span>Mineros</span><span>Saboteadores</span><span>Cartas c/u</span></div>
+              <div class="rules-table-row"><span>3-5</span><span>2-4</span><span>1</span><span>6 cartas</span></div>
+              <div class="rules-table-row"><span>6-7</span><span>4-5</span><span>2</span><span>5 cartas</span></div>
+              <div class="rules-table-row"><span>8-10</span><span>5-7</span><span>3</span><span>4 cartas</span></div>
             </div>
-            <p class="rules-text" style="margin-top:10px">Colocá la carta de inicio y 3 cartas de destino boca abajo a 7 espacios. Solo una tiene el tesoro.</p>
+            <p class="rules-text" style="margin-top:10px">Colocá la carta de inicio (escalera) y 3 cartas de destino boca abajo a 7 espacios. Solo una tiene el tesoro, las otras dos son piedras. El resto de cartas de túnel y acción forman el mazo.</p>
           </div>
         </div>
       </div>
       <div class="accordion-item">
         <button class="accordion-btn" onclick="toggleAccordion('sab-play')"><span>🔄 Cómo se juega</span><span class="accordion-arrow" id="arrow-sab-play">▼</span></button>
         <div class="accordion-body" id="acc-sab-play" style="display:none">
-          <div class="card-list" style="margin-top:12px">
-            <div class="card-item"><span class="card-name">🗺️ Carta de túnel</span><span class="card-desc">Colocala conectada a otra ya en la mesa. Deben encajar. Mineros construyen; saboteadores bloquean sin ser obvios.</span></div>
-            <div class="card-item"><span class="card-name">🔨 Romper herramienta</span><span class="card-desc">Poné una herramienta rota frente a otro jugador. No puede colocar túneles hasta repararse. 3 herramientas: pico, linterna, vagoneta.</span></div>
-            <div class="card-item"><span class="card-name">🔧 Reparar herramienta</span><span class="card-desc">Quitá una herramienta rota de cualquier jugador. Algunas cartas reparan 2 a la vez.</span></div>
-            <div class="card-item"><span class="card-name">🗺️ Mapa</span><span class="card-desc">Mirá en secreto 1 carta de destino. Podés decir lo que viste o mentir.</span></div>
-            <div class="card-item"><span class="card-name">💥 Derrumbe</span><span class="card-desc">Retirá una carta de túnel ya colocada.</span></div>
-            <div class="card-item"><span class="card-name">🗑️ Descartar</span><span class="card-desc">Si no podés o no querés, descartá 1 carta y robá 1.</span></div>
+          <p class="rules-text" style="margin-top:12px">En cada turno el jugador <strong>primero juega o descarta 1 carta</strong>, y luego <strong>roba 1 carta</strong> del mazo para reponer su mano. Tiene 3 opciones:</p>
+          <div class="card-list" style="margin-top:10px">
+            <div class="card-item"><span class="card-name">🗺️ Jugar carta de túnel</span><span class="card-desc">Colocala conectada a otra ya en la mesa. Los caminos deben encajar. Mineros construyen hacia el tesoro; saboteadores bloquean sin ser demasiado obvios.</span></div>
+            <div class="card-item"><span class="card-name">⚡ Jugar carta de acción</span><span class="card-desc">Se aplica el efecto de la carta. Luego se roba 1 carta del mazo.</span></div>
+            <div class="card-item"><span class="card-name">🗑️ Descartar</span><span class="card-desc">Si no podés o no querés jugar nada, descartá 1 carta boca arriba y robá 1 nueva del mazo.</span></div>
+          </div>
+          <div style="margin-top:14px">
+            <div class="rules-section-title" style="font-size:14px">Cartas de acción</div>
+            <div class="card-list">
+              <div class="card-item"><span class="card-name">🔨 Romper herramienta</span><span class="card-desc">Ponela frente a otro jugador. Ese jugador no puede colocar túneles hasta que lo reparen. Hay 3 herramientas: pico, linterna y vagoneta.</span></div>
+              <div class="card-item"><span class="card-name">🔧 Reparar herramienta</span><span class="card-desc">Quitá una herramienta rota de cualquier jugador. Algunas cartas reparan 2 a la vez.</span></div>
+              <div class="card-item"><span class="card-name">🗺️ Mapa</span><span class="card-desc">Mirá en secreto 1 carta de destino. Podés decir lo que viste o mentir.</span></div>
+              <div class="card-item"><span class="card-name">💥 Derrumbe</span><span class="card-desc">Retirá una carta de túnel ya colocada en la mesa.</span></div>
+            </div>
           </div>
         </div>
       </div>
       <div class="accordion-item">
-        <button class="accordion-btn" onclick="toggleAccordion('sab-end')"><span>🏁 Fin de ronda y oro</span><span class="accordion-arrow" id="arrow-sab-end">▼</span></button>
+        <button class="accordion-btn" onclick="toggleAccordion('sab-end')"><span>🏁 Fin de ronda</span><span class="accordion-arrow" id="arrow-sab-end">▼</span></button>
         <div class="accordion-body" id="acc-sab-end" style="display:none">
-          <p class="rules-text" style="margin-top:12px"><strong>Ganan los mineros</strong> si llegan al tesoro. El que colocó la última carta elige su pepita primero.<br><br><strong>Ganan los saboteadores</strong> si se agota el mazo: 4 pepitas si era 1 solo · 3 si eran 2-3 · 2 si eran 4.<br><br>Al final se revelan los roles. Se juegan 3 rondas. Gana quien tenga más pepitas.</p>
+          <p class="rules-text" style="margin-top:12px"><strong>Ganan los mineros</strong> si se completa un camino hasta el tesoro. Los puntos los recibe todo el equipo minero — salvo que haya jugado El Egoísta, en cuyo caso solo él recibe puntos.<br><br>
+          <strong>Ganan los saboteadores</strong> si el mazo se agota sin llegar al tesoro.<br><br>
+          Al final de cada ronda se revelan todos los roles.</p>
         </div>
       </div>
       <div class="accordion-item">
         <button class="accordion-btn" onclick="toggleAccordion('sab-pts')"><span>🏆 Puntos en la jornada</span><span class="accordion-arrow" id="arrow-sab-pts">▼</span></button>
         <div class="accordion-body" id="acc-sab-pts" style="display:none">
           <div style="margin-top:12px">
-            <div class="rule-row"><span>Equipo Ganador</span><span class="rule-pts">8 PTS</span></div>
+            <div class="rule-row"><span>Equipo Ganador (mineros llegan o saboteadores bloquean)</span><span class="rule-pts">8 PTS</span></div>
             <div class="rule-row"><span>Equipo Perdedor</span><span class="rule-pts">3 PTS</span></div>
-            <div class="rule-row"><span style="color:var(--green)">⚡ Bonus "Gran Traidor"</span><span class="rule-pts" style="color:var(--green)">+2 PTS</span></div>
+            <div class="rule-row"><span style="color:var(--green)">⚡ Bonus "Gran Traidor": eras saboteador, ganaste y nadie sospechó de vos hasta el final</span><span class="rule-pts" style="color:var(--green)">+2 PTS</span></div>
+            <div class="rule-row" style="border-color:rgba(255,209,102,0.3)"><span style="color:#FFD166">⭐ El Egoísta: llegaste al oro vos solo y no repartiste puntos a tus compañeros mineros</span><span class="rule-pts" style="color:#FFD166">10 PTS</span></div>
+          </div>
+          <div style="margin-top:10px;background:rgba(255,209,102,0.07);border:1px solid rgba(255,209,102,0.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--muted)">
+            ⚠️ Cuando El Egoísta activa su rol, los demás mineros reciben <strong style="color:var(--text)">0 puntos</strong> esa ronda aunque el equipo haya ganado.
           </div>
         </div>
       </div>
@@ -458,10 +472,11 @@
         <button class="accordion-btn" onclick="toggleAccordion('sab-faq')"><span>❓ FAQ</span><span class="accordion-arrow" id="arrow-sab-faq">▼</span></button>
         <div class="accordion-body" id="acc-sab-faq" style="display:none">
           <div class="faq-list" style="margin-top:12px">
-            <div class="faq-item"><div class="faq-q">¿Un saboteador puede reparar herramientas?</div><div class="faq-a">Sí, para no levantar sospechas.</div></div>
-            <div class="faq-item"><div class="faq-q">¿Puedo tener más de una herramienta rota?</div><div class="faq-a">Sí. Necesitás una reparación por cada herramienta rota.</div></div>
-            <div class="faq-item"><div class="faq-q">¿Qué pasa si no había saboteadores y nadie llega?</div><div class="faq-a">No se reparte oro esa ronda.</div></div>
-            <div class="faq-item"><div class="faq-q">¿Las pepitas se muestran durante el juego?</div><div class="faq-a">No, se mantienen en secreto hasta el final de las 3 rondas.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Un saboteador puede reparar herramientas?</div><div class="faq-a">Sí, para no levantar sospechas. El arte del saboteador es parecer un buen minero.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Puedo tener más de una herramienta rota?</div><div class="faq-a">Sí. Necesitás una reparación por cada herramienta rota para volver a colocar túneles.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Qué pasa si no había saboteadores y nadie llega?</div><div class="faq-a">No se reparte oro esa ronda y nadie suma puntos por ganar.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Cómo funciona El Egoísta?</div><div class="faq-a">Es un minero que, si es él quien coloca la última carta llegando al oro, activa su rol: recibe 10 pts solo y sus compañeros mineros reciben 0 esa ronda. Si los mineros pierden, recibe 3 pts como cualquier perdedor.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Cómo se activa el bonus "Gran Traidor"?</div><div class="faq-a">Al revelar los roles al final de la ronda, si nadie señaló al saboteador durante la partida y los saboteadores ganaron, ese jugador recibe +2 pts adicionales.</div></div>
           </div>
         </div>
       </div>
@@ -480,7 +495,7 @@
       <div class="accordion-item">
         <button class="accordion-btn" onclick="toggleAccordion('bah-play')"><span>🎲 Cómo se juega</span><span class="accordion-arrow" id="arrow-bah-play">▼</span></button>
         <div class="accordion-body" id="acc-bah-play" style="display:none">
-          <p class="rules-text" style="margin-top:12px">Un jugador tira los 7 dados. En orden, cada jugador elige 1 dado y realiza su acción. El que queda sin dado tira en la siguiente ronda.</p>
+          <p class="rules-text" style="margin-top:12px">Un jugador tira los dados. La cantidad de dados es siempre <strong>1 menos que la cantidad de jugadores</strong> (n-1 dados para n jugadores), así siempre queda 1 jugador sin poder elegir. En orden, cada jugador elige 1 dado y realiza su acción. El que queda sin dado es quien tira en la siguiente ronda.</p>
           <div class="card-list" style="margin-top:10px">
             <div class="card-item"><span class="card-name">📦 Robar carta de acción</span><span class="card-desc">Tomás del mazo. Máximo 4 cartas de acción. Si superás, descartá hasta quedarte con 4.</span></div>
             <div class="card-item"><span class="card-name">💰 Robar carta de botín</span><span class="card-desc">Tomás una bolsa ($100.000 a $500.000).</span></div>
@@ -809,6 +824,7 @@ function renderSaboteurForm(area) {
         <select class="pos-select" id="sab-rol-${i}">
           <option value="minero">⛏️ Minero</option>
           <option value="saboteador">🕵️ Saboteador</option>
+          <option value="egoista">⭐ El Egoísta</option>
         </select>
         <label class="bonus-label"><input type="checkbox" id="sab-traidor-${i}"> ⚡ Gran Traidor +2</label>
       </div>`).join('')}`;
@@ -848,11 +864,40 @@ async function saveGame() {
   } else if (game === 'saboteur') {
     const winner = document.getElementById('sab-winner').value;
     results = players.map((p,i) => {
-      const rol = document.getElementById('sab-rol-'+i).value;
-      const traidor = document.getElementById('sab-traidor-'+i)?.checked;
-      const won = (winner==='mineros'&&rol==='minero')||(winner==='saboteadores'&&rol==='saboteador');
-      const bonus = (traidor&&rol==='saboteador'&&winner==='saboteadores') ? 2 : 0;
-      return { player: p.name, pts: (won?8:3)+bonus, label: won?'✅ Ganador ('+(rol==='minero'?'Minero':'Saboteador')+')':'❌ Perdedor', bonus: bonus?'+2 Gran Traidor':'' };
+      const rol      = document.getElementById('sab-rol-'+i).value;
+      const traidor  = document.getElementById('sab-traidor-'+i)?.checked;
+      const isEgoista   = rol === 'egoista';
+      const isSaboteador = rol === 'saboteador';
+      const isMinero     = rol === 'minero';
+
+      // El Egoísta cuenta como minero para la lógica de ganar
+      const mineroGano   = winner === 'mineros';
+      const saboteurGano = winner === 'saboteadores';
+
+      if (isEgoista && mineroGano) {
+        // El Egoísta solo: 10 pts, sus compañeros mineros quedan con 3 (perdedor lógico para ellos)
+        return { player: p.name, pts: 10, label: '⭐ El Egoísta (Ganador solitario)', bonus: '' };
+      }
+      if (isMinero && mineroGano) {
+        // Minero normal que ganó pero el Egoísta estaba en juego — ver si hay egoísta activo
+        const hayEgoista = players.some((pp, ii) => document.getElementById('sab-rol-'+ii)?.value === 'egoista');
+        if (hayEgoista) {
+          return { player: p.name, pts: 0, label: '⛏️ Minero (traicionado por el Egoísta)', bonus: '' };
+        }
+        return { player: p.name, pts: 8, label: '✅ Ganador (Minero)', bonus: '' };
+      }
+      if (isSaboteador) {
+        const won = saboteurGano;
+        const bTraidor = (traidor && won) ? 2 : 0;
+        return { player: p.name, pts: (won?8:3)+bTraidor, label: won?'✅ Ganador (Saboteador)':'❌ Perdedor', bonus: bTraidor?'+2 Gran Traidor':'' };
+      }
+      // Egoísta que no ganó (los mineros perdieron)
+      if (isEgoista && !mineroGano) {
+        return { player: p.name, pts: 3, label: '❌ El Egoísta (Equipo perdió)', bonus: '' };
+      }
+      // Saboteador o minero perdedor
+      const won = (winner==='mineros'&&isMinero)||(winner==='saboteadores'&&isSaboteador);
+      return { player: p.name, pts: won?8:3, label: won?'✅ Ganador':'❌ Perdedor', bonus: '' };
     });
   } else if (game === 'bahamas') {
     const ptsMap = {ganador:10,sobreviviente:5,eliminado:2};
