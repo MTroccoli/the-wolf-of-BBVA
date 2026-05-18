@@ -1045,17 +1045,54 @@ function renderAdmin() {
         </span>`).join('')}</div>`;
 
   const pEl = document.getElementById('admin-players-list');
-  pEl.innerHTML = players.length === 0
-    ? '<div style="color:var(--muted);font-size:13px">No hay jugadores aún.</div>'
-    : players.map((p,i) => {
-        const val = (bonusPoints.find(x=>x.name===p.name)||{}).pts||0;
-        return `<div class="player-admin-row">
-          <span style="flex:1;font-size:14px;font-weight:500">${p.name}</span>
-          <span style="font-size:12px;color:var(--muted)">Pts extra:</span>
-          <input type="number" class="edit-input" id="bonus-edit-${i}" value="${val}" min="-100" max="200" />
-          <button class="btn btn-primary btn-sm" onclick="applyBonus('${p.name}',${i})">Aplicar</button>
-        </div>`;
-      }).join('');
+  if (players.length === 0) {
+    pEl.innerHTML = '<div style="color:var(--muted);font-size:13px">No hay jugadores aún.</div>';
+  } else {
+    // No re-renderizar si hay un input enfocado
+    const focused = document.activeElement;
+    if (focused && focused.classList.contains('edit-input')) {
+      // Solo actualizar el total visible sin tocar los inputs
+      players.forEach((p,i) => {
+        const totalEl = document.getElementById('pts-total-'+i);
+        if (totalEl) {
+          const extra = parseInt(document.getElementById('bonus-edit-'+i)?.value)||0;
+          let base = 0;
+          history.forEach(h => (h.results||[]).forEach(r => { if(r.player===p.name) base+=r.pts; }));
+          totalEl.textContent = base + extra;
+        }
+      });
+    } else {
+      pEl.innerHTML = `
+        <table style="width:100%;border-collapse:collapse">
+          <thead>
+            <tr>
+              <th style="text-align:left;font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);padding:6px 8px 8px;border-bottom:1px solid var(--border)">Jugador</th>
+              <th style="text-align:right;font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);padding:6px 8px 8px;border-bottom:1px solid var(--border)">Total</th>
+              <th style="text-align:center;font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);padding:6px 8px 8px;border-bottom:1px solid var(--border)">Ajuste</th>
+              <th style="padding:6px 0 8px;border-bottom:1px solid var(--border)"></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${players.map((p,i) => {
+              const b = bonusPoints.find(x=>x.name===p.name);
+              const extra = b ? b.pts : 0;
+              let base = 0;
+              history.forEach(h => (h.results||[]).forEach(r => { if(r.player===p.name) base+=r.pts; }));
+              return `<tr style="border-bottom:1px solid rgba(46,127,217,0.06)">
+                <td style="padding:8px 8px;font-size:14px;font-weight:500">${p.name}</td>
+                <td style="padding:8px 8px;text-align:right;font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent);letter-spacing:.04em" id="pts-total-${i}">${base+extra}</td>
+                <td style="padding:8px 6px;text-align:center">
+                  <input type="number" class="edit-input" id="bonus-edit-${i}" value="${extra}" min="-100" max="200" style="width:60px" />
+                </td>
+                <td style="padding:8px 4px">
+                  <button class="btn btn-primary btn-sm" onclick="applyBonus('${p.name}',${i})">✔</button>
+                </td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>`;
+    }
+  }
 
   const hEl = document.getElementById('admin-history-list');
   hEl.innerHTML = history.length === 0
