@@ -1141,7 +1141,13 @@ let faqs = [];
 async function fetchFaqs() {
   try {
     const r = await fetch(`${SUPA_URL}/rest/v1/faqs?select=*`, { headers: HEADERS });
-    if (r.ok) { faqs = await r.json(); renderFaqList(); }
+    if (r.ok) {
+      faqs = await r.json();
+      // No re-renderizar si el admin está escribiendo una respuesta
+      const focused = document.activeElement;
+      if (focused && focused.classList.contains('faq-answer-input')) return;
+      renderFaqList();
+    }
   } catch(e) {}
 }
 
