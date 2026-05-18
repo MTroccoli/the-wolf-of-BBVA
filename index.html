@@ -458,8 +458,9 @@
         <button class="accordion-btn" onclick="toggleAccordion('sab-pts')"><span>🏆 Puntos en la jornada</span><span class="accordion-arrow" id="arrow-sab-pts">▼</span></button>
         <div class="accordion-body" id="acc-sab-pts" style="display:none">
           <div style="margin-top:12px">
-            <div class="rule-row"><span>Equipo Ganador (mineros llegan o saboteadores bloquean)</span><span class="rule-pts">8 PTS</span></div>
-            <div class="rule-row"><span>Equipo Perdedor</span><span class="rule-pts">3 PTS</span></div>
+            <div class="rule-row"><span>Equipo Ganador — Saboteadores bloquean el oro</span><span class="rule-pts">12 PTS</span></div>
+            <div class="rule-row"><span>Equipo Ganador — Mineros llegan al tesoro</span><span class="rule-pts">8 PTS</span></div>
+            <div class="rule-row"><span>Equipo Perdedor</span><span class="rule-pts">2 PTS</span></div>
             <div class="rule-row"><span style="color:var(--green)">⚡ Bonus "Gran Traidor": eras saboteador, ganaste y nadie sospechó de vos hasta el final</span><span class="rule-pts" style="color:var(--green)">+2 PTS</span></div>
             <div class="rule-row" style="border-color:rgba(255,209,102,0.3)"><span style="color:#FFD166">⭐ El Egoísta: llegaste al oro vos solo y no repartiste puntos a tus compañeros mineros</span><span class="rule-pts" style="color:#FFD166">10 PTS</span></div>
           </div>
@@ -532,8 +533,9 @@
         <button class="accordion-btn" onclick="toggleAccordion('bah-pts')"><span>🏆 Puntos en la jornada</span><span class="accordion-arrow" id="arrow-bah-pts">▼</span></button>
         <div class="accordion-body" id="acc-bah-pts" style="display:none">
           <div style="margin-top:12px">
-            <div class="rule-row"><span>Ganador — Más dinero</span><span class="rule-pts">10 PTS</span></div>
-            <div class="rule-row"><span>Sobreviviente — Con paracaídas</span><span class="rule-pts">5 PTS</span></div>
+            <div class="rule-row"><span>🕵️ Victoria FBI — Tenés las 3 cartas del agente al final de tu turno</span><span class="rule-pts" style="color:#FFD166">15 PTS</span></div>
+            <div class="rule-row"><span>Ganador — Más dinero con paracaídas</span><span class="rule-pts">10 PTS</span></div>
+            <div class="rule-row"><span>Sobreviviente — Con paracaídas, menos dinero</span><span class="rule-pts">5 PTS</span></div>
             <div class="rule-row"><span>Eliminado — Sin paracaídas</span><span class="rule-pts">2 PTS</span></div>
           </div>
         </div>
@@ -838,6 +840,7 @@ function renderBahamasForm(area) {
         <div class="player-pos-name">${p.name}</div>
         <select class="pos-select" id="bah-res-${i}">
           <option value="ganador">🏆 Ganador — 10 pts</option>
+          <option value="fbi">🕵️ Victoria FBI — 15 pts</option>
           <option value="sobreviviente">🪂 Sobreviviente — 5 pts</option>
           <option value="eliminado">💥 Eliminado — 2 pts</option>
         </select>
@@ -889,20 +892,20 @@ async function saveGame() {
       if (isSaboteador) {
         const won = saboteurGano;
         const bTraidor = (traidor && won) ? 2 : 0;
-        return { player: p.name, pts: (won?8:3)+bTraidor, label: won?'✅ Ganador (Saboteador)':'❌ Perdedor', bonus: bTraidor?'+2 Gran Traidor':'' };
+        return { player: p.name, pts: (won?12:2)+bTraidor, label: won?'✅ Ganador (Saboteador)':'❌ Perdedor', bonus: bTraidor?'+2 Gran Traidor':'' };
       }
       // Egoísta que no ganó (los mineros perdieron)
       if (isEgoista && !mineroGano) {
-        return { player: p.name, pts: 3, label: '❌ El Egoísta (Equipo perdió)', bonus: '' };
+        return { player: p.name, pts: 2, label: '❌ El Egoísta (Equipo perdió)', bonus: '' };
       }
       // Saboteador o minero perdedor
       const won = (winner==='mineros'&&isMinero)||(winner==='saboteadores'&&isSaboteador);
-      return { player: p.name, pts: won?8:3, label: won?'✅ Ganador':'❌ Perdedor', bonus: '' };
+      return { player: p.name, pts: won?8:2, label: won?'✅ Ganador':'❌ Perdedor', bonus: '' };
     });
   } else if (game === 'bahamas') {
-    const ptsMap = {ganador:10,sobreviviente:5,eliminado:2};
-    const labelMap = {ganador:'🏆 Ganador',sobreviviente:'🪂 Sobreviviente',eliminado:'💥 Eliminado'};
-    const ganadores = players.filter((p,i) => document.getElementById('bah-res-'+i).value==='ganador');
+    const ptsMap   = {ganador:10, fbi:15, sobreviviente:5, eliminado:2};
+    const labelMap = {ganador:'🏆 Ganador', fbi:'🕵️ Victoria FBI', sobreviviente:'🪂 Sobreviviente', eliminado:'💥 Eliminado'};
+    const ganadores = players.filter((p,i) => ['ganador','fbi'].includes(document.getElementById('bah-res-'+i).value));
     if (ganadores.length > 1) { showAlert(alertEl,'Solo puede haber 1 ganador en Bahamas.','error'); return; }
     results = players.map((p,i) => {
       const res = document.getElementById('bah-res-'+i).value;
@@ -1199,12 +1202,10 @@ setInterval(fetchFaqs, 5000);
 // Reemplazamos renderAdmin para que no pise valores que el user está editando
 const _origRenderAdmin = renderAdmin;
 function renderAdminSafe() {
-  // Solo re-renderiza si no hay ningún input de bonus enfocado
   const focused = document.activeElement;
-  if (focused && focused.classList.contains('edit-input')) return;
+  if (focused && (focused.classList.contains('edit-input') || focused.classList.contains('faq-answer-input'))) return;
   _origRenderAdmin();
 }
-// Override en el polling
 const _origRefreshUI = refreshUI;
 function refreshUI() {
   const active = document.querySelector('.panel.active');
