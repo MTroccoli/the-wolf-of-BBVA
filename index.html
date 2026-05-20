@@ -234,6 +234,37 @@
     .alert { font-size: 12px; padding: 8px 12px; }
   }
 
+  /* MUSIC PLAYER */
+  .music-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 60;
+    background: rgba(7,30,61,0.97);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    padding: 8px 16px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+  }
+  .music-bar.visible { display: flex; }
+  .music-track-info { flex: 1; min-width: 0; }
+  .music-track-name { font-size: 11px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .music-track-set { font-size: 9px; color: var(--muted); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .06em; }
+  .music-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .music-btn { background: transparent; border: 1px solid var(--border); border-radius: 6px; padding: 5px 8px; color: var(--text); cursor: pointer; font-size: 13px; transition: all 0.15s; line-height: 1; }
+  .music-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .music-btn.active { background: var(--bbva-blue); border-color: var(--bbva-blue); }
+  .music-set-select { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; font-family: 'DM Sans', sans-serif; font-size: 11px; color: var(--text); outline: none; cursor: pointer; }
+  .music-set-select option { background: #0D3D75; }
+  .music-vol { width: 60px; accent-color: var(--accent); cursor: pointer; }
+  .music-toggle { background: transparent; border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; color: var(--muted); cursor: pointer; font-size: 11px; font-family: 'DM Mono', monospace; transition: all 0.15s; }
+  .music-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+  @media (max-width: 640px) {
+    .music-bar { padding: 6px 10px; gap: 6px; padding-bottom: calc(6px + 56px); }
+    .music-vol { display: none; }
+    .music-set-select { font-size: 10px; max-width: 90px; }
+  }
+
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: rgba(46,127,217,0.3); border-radius: 3px; }
@@ -277,6 +308,7 @@
       <div class="sync-bar"><span class="sync-dot" id="sync-dot"></span><span id="sync-text">EN VIVO</span></div>
       <span id="user-badge-header" class="user-badge"></span>
       <span id="admin-badge-header" class="admin-badge" style="display:none">⚡ ADMIN</span>
+      <button class="music-toggle" onclick="toggleMusicBar()" id="music-toggle-btn">🎵 Música</button>
       <button class="logout-btn" onclick="doLogout()">Salir</button>
     </div>
   </header>
@@ -601,6 +633,29 @@
       <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Borra TODOS los datos. Irreversible.</p>
       <button class="btn btn-danger" onclick="resetAll()">🗑 BORRAR TODO Y EMPEZAR DE CERO</button>
     </div>
+  </div>
+</div>
+
+<!-- MUSIC PLAYER BAR -->
+<div class="music-bar" id="music-bar">
+  <audio id="audio-player" preload="auto"></audio>
+  <div class="music-track-info">
+    <div class="music-track-name" id="track-name">— Sin música —</div>
+    <div class="music-track-set" id="track-set">Seleccioná un set ↑</div>
+  </div>
+  <div class="music-controls">
+    <select class="music-set-select" id="music-set-select" onchange="changeSet()">
+      <option value="got">⚔️ Game of Thrones</option>
+      <option value="lotr">💍 Lord of the Rings</option>
+      <option value="cotl">🐑 Cult of the Lamb</option>
+      <option value="batman">🦇 Batman</option>
+    </select>
+    <button class="music-btn" onclick="prevTrack()" title="Anterior">⏮</button>
+    <button class="music-btn" id="play-btn" onclick="togglePlay()" title="Play/Pause">▶</button>
+    <button class="music-btn" onclick="nextTrack()" title="Siguiente">⏭</button>
+    <button class="music-btn" id="shuffle-btn" onclick="toggleShuffle()" title="Aleatorio">🔀</button>
+    <input type="range" class="music-vol" id="volume-slider" min="0" max="1" step="0.05" value="0.5" oninput="setVolume(this.value)" />
+    <button class="music-btn" id="mute-btn" onclick="toggleMute()" title="Silenciar">🔊</button>
   </div>
 </div>
 
@@ -1258,6 +1313,145 @@ function refreshUI() {
   if (id === 'historial') renderHistory();
   if (id === 'admin')     renderAdminSafe();
 }
+// ── MUSIC PLAYER ───────────────────────────────────────────────────────
+const MUSIC_SETS = {
+  got: {
+    name: '⚔️ Game of Thrones',
+    tracks: [
+      { file: 'music/0-got-main-title.mp3',           name: 'Main Title' },
+      { file: 'music/1-got-rains-of-castamere.mp3',   name: 'The Rains of Castamere' },
+      { file: 'music/2-got-light-of-the-seven.mp3',   name: 'Light of the Seven' },
+      { file: 'music/3-got-dracarys.mp3',              name: 'Dracarys' },
+      { file: 'music/4-got-the-night-king.mp3',        name: 'The Night King' },
+    ]
+  },
+  lotr: {
+    name: '💍 Lord of the Rings',
+    tracks: [
+      { file: 'music/5-lotr-concerning-hobbits.mp3',  name: 'Concerning Hobbits' },
+      { file: 'music/6-lotr-bridge-of-khazad-dum.mp3',name: 'The Bridge of Khazad-dûm' },
+      { file: 'music/7-lotr-rohan-theme.mp3',          name: 'Rohan Theme' },
+      { file: 'music/8-lotr-fellowship.mp3',           name: 'The Fellowship of the Ring' },
+      { file: 'music/9-lotr-into-the-west.mp3',        name: 'Into the West' },
+    ]
+  },
+  cotl: {
+    name: '🐑 Cult of the Lamb',
+    tracks: [
+      { file: 'music/10-cotl-praise-the-lamb.mp3',    name: 'Praise the Lamb' },
+      { file: 'music/11-cotl-anchordeep.mp3',          name: 'Anchordeep' },
+      { file: 'music/12-cotl-knucklebones.mp3',        name: 'Knucklebones' },
+      { file: 'music/13-cotl-narinder.mp3',            name: "Narinder's Theme" },
+      { file: 'music/14-cotl-crown-and-scepter.mp3',  name: 'Crown and Scepter' },
+    ]
+  },
+  batman: {
+    name: '🦇 Batman',
+    tracks: [
+      { file: 'music/15-batman-overture.mp3',          name: 'The Dark Knight Overture' },
+      { file: 'music/16-batman-why-so-serious.mp3',    name: 'Why So Serious?' },
+      { file: 'music/17-batman-a-dark-knight.mp3',     name: 'A Dark Knight' },
+      { file: 'music/18-batman-like-a-dog.mp3',        name: 'Like a Dog Chasing Cars' },
+      { file: 'music/19-batman-harvey-two-face.mp3',   name: 'Harvey Two-Face' },
+    ]
+  }
+};
+
+let currentSet     = 'got';
+let currentTrackIdx = 0;
+let isPlaying      = false;
+let isMuted        = false;
+let isShuffle      = false;
+let musicBarOpen   = false;
+
+const audio = document.getElementById('audio-player');
+
+function toggleMusicBar() {
+  musicBarOpen = !musicBarOpen;
+  const bar = document.getElementById('music-bar');
+  bar.classList.toggle('visible', musicBarOpen);
+  const btn = document.getElementById('music-toggle-btn');
+  if (btn) btn.classList.toggle('active', musicBarOpen);
+  if (musicBarOpen && !isPlaying) loadTrack(currentSet, 0);
+}
+window.toggleMusicBar = toggleMusicBar;
+
+function loadTrack(set, idx) {
+  currentSet = set;
+  const tracks = MUSIC_SETS[set].tracks;
+  if (!tracks || !tracks[idx]) return;
+  currentTrackIdx = idx;
+  const track = tracks[idx];
+  // Solo cargar si el archivo existe (fallback silencioso)
+  audio.src = track.file;
+  audio.volume = parseFloat(document.getElementById('volume-slider').value);
+  document.getElementById('track-name').textContent = track.name;
+  document.getElementById('track-set').textContent = MUSIC_SETS[set].name + ' · ' + (idx+1) + '/' + tracks.length;
+}
+
+function togglePlay() {
+  if (!audio.src || audio.src === window.location.href) { loadTrack(currentSet, 0); }
+  if (isPlaying) {
+    audio.pause();
+    isPlaying = false;
+    document.getElementById('play-btn').textContent = '▶';
+  } else {
+    audio.play().catch(() => {});
+    isPlaying = true;
+    document.getElementById('play-btn').textContent = '⏸';
+  }
+}
+window.togglePlay = togglePlay;
+
+function nextTrack() {
+  const tracks = MUSIC_SETS[currentSet].tracks;
+  let next = isShuffle
+    ? Math.floor(Math.random() * tracks.length)
+    : (currentTrackIdx + 1) % tracks.length;
+  loadTrack(currentSet, next);
+  if (isPlaying) audio.play().catch(() => {});
+}
+window.nextTrack = nextTrack;
+
+function prevTrack() {
+  const tracks = MUSIC_SETS[currentSet].tracks;
+  let prev = (currentTrackIdx - 1 + tracks.length) % tracks.length;
+  loadTrack(currentSet, prev);
+  if (isPlaying) audio.play().catch(() => {});
+}
+window.prevTrack = prevTrack;
+
+function changeSet() {
+  const set = document.getElementById('music-set-select').value;
+  loadTrack(set, 0);
+  if (isPlaying) audio.play().catch(() => {});
+}
+window.changeSet = changeSet;
+
+function toggleShuffle() {
+  isShuffle = !isShuffle;
+  document.getElementById('shuffle-btn').classList.toggle('active', isShuffle);
+}
+window.toggleShuffle = toggleShuffle;
+
+function toggleMute() {
+  isMuted = !isMuted;
+  audio.muted = isMuted;
+  document.getElementById('mute-btn').textContent = isMuted ? '🔇' : '🔊';
+}
+window.toggleMute = toggleMute;
+
+function setVolume(val) {
+  audio.volume = parseFloat(val);
+  if (isMuted && val > 0) { isMuted = false; audio.muted = false; document.getElementById('mute-btn').textContent = '🔊'; }
+}
+window.setVolume = setVolume;
+
+// Auto-siguiente track al terminar
+audio.addEventListener('ended', () => { nextTrack(); });
+
+// Cargar primer track de GOT al inicio (sin autoplay — esperamos interacción)
+loadTrack('got', 0);
 
 </script>
 </body>
