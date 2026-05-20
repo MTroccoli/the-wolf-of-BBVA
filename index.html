@@ -31,7 +31,7 @@
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
   .sync-bar { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); display: flex; align-items: center; }
 
-  #login-screen { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; background: var(--bg); padding: 20px; }
+  #login-screen { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; background: var(--bg); padding: 20px 20px 80px; }
   .login-box { width: 100%; max-width: 420px; background: var(--bg2); border: 1px solid var(--border); border-radius: 18px; padding: 44px 38px; text-align: center; box-shadow: 0 0 80px rgba(20,84,156,0.35); }
   .login-logo { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.3em; color: var(--muted); text-transform: uppercase; margin-bottom: 14px; }
   .login-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(30px, 9vw, 52px); color: var(--text); letter-spacing: 0.05em; line-height: 1.0; margin-bottom: 4px; }
@@ -1450,8 +1450,12 @@ window.setVolume = setVolume;
 // Auto-siguiente track al terminar
 audio.addEventListener('ended', () => { nextTrack(); });
 
-// Cargar primer track de GOT al inicio (sin autoplay — esperamos interacción)
+// Cargar primer track de GOT al inicio y mostrar barra
 loadTrack('got', 0);
+document.getElementById('music-bar').classList.add('visible');
+musicBarOpen = true;
+const btn = document.getElementById('music-toggle-btn');
+if (btn) btn.classList.add('active');
 
 </script>
 </body>
