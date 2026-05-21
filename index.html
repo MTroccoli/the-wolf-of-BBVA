@@ -645,11 +645,12 @@
   </div>
   <div class="music-controls">
     <select class="music-set-select" id="music-set-select" onchange="changeSet()">
+      <option value="clasicos">⭐ Clásicos del Cine</option>
       <option value="got">⚔️ Game of Thrones</option>
       <option value="lotr">💍 Lord of the Rings</option>
       <option value="cotl">🐑 Cult of the Lamb</option>
       <option value="batman">🦇 Batman</option>
-        <option value="tavern">🎻 The Witcher</option>
+      <option value="tavern">🎻 The Witcher</option>
     </select>
     <button class="music-btn" onclick="prevTrack()" title="Anterior">⏮</button>
     <button class="music-btn" id="play-btn" onclick="togglePlay()" title="Play/Pause">▶</button>
@@ -1316,6 +1317,18 @@ function refreshUI() {
 }
 // ── MUSIC PLAYER ───────────────────────────────────────────────────────
 const MUSIC_SETS = {
+  clasicos: {
+    name: '⭐ Clásicos del Cine',
+    loop: false,
+    tracks: [
+      { file: 'music/1-clasicos-star-wars.mp3',          name: 'Star Wars — Main Theme' },
+      { file: 'music/2-clasicos-jurassic-park.mp3',      name: 'Jurassic Park — Main Theme' },
+      { file: 'music/3-clasicos-indiana-jones.mp3',      name: 'Indiana Jones — Raiders March' },
+      { file: 'music/4-clasicos-el-padrino.mp3',         name: 'El Padrino — Main Title' },
+      { file: 'music/5-clasicas-piratas-del-caribe.mp3', name: 'Piratas del Caribe — He\'s a Pirate' },
+      { file: 'music/6-clasicas-et.mp3',                 name: 'E.T. — Flying Theme' },
+    ]
+  },
   got: {
     name: '⚔️ Game of Thrones',
     tracks: [
@@ -1474,8 +1487,8 @@ audio.addEventListener('ended', () => {
   if (!MUSIC_SETS[currentSet].loop) nextTrack();
 });
 
-// Cargar primer track de GOT al inicio y mostrar barra
-loadTrack('got', 0);
+// Cargar primer track de Clásicos al inicio y mostrar barra
+loadTrack('clasicos', 0);
 document.getElementById('music-bar').classList.add('visible');
 musicBarOpen = true;
 const btn = document.getElementById('music-toggle-btn');
