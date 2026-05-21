@@ -649,6 +649,7 @@
       <option value="lotr">💍 Lord of the Rings</option>
       <option value="cotl">🐑 Cult of the Lamb</option>
       <option value="batman">🦇 Batman</option>
+        <option value="tavern">🎻 The Witcher</option>
     </select>
     <button class="music-btn" onclick="prevTrack()" title="Anterior">⏮</button>
     <button class="music-btn" id="play-btn" onclick="togglePlay()" title="Play/Pause">▶</button>
@@ -1319,40 +1320,55 @@ const MUSIC_SETS = {
     name: '⚔️ Game of Thrones',
     tracks: [
       { file: 'music/0-got-main-title.mp3',           name: 'Main Title' },
-      { file: 'music/1-got-rains-of-castamere.mp3',   name: 'The Rains of Castamere' },
-      { file: 'music/2-got-light-of-the-seven.mp3',   name: 'Light of the Seven' },
-      { file: 'music/3-got-dracarys.mp3',              name: 'Dracarys' },
-      { file: 'music/4-got-the-night-king.mp3',        name: 'The Night King' },
+      { file: 'music/1-got-the-winds-of-winter.mp3',  name: 'The Winds of Winter' },
+      { file: 'music/2-got-the-children.mp3',         name: 'The Children' },
+      { file: 'music/3-got-blood-of-my-blood.mp3',    name: 'Blood of My Blood' },
+      { file: 'music/4-got-reign.mp3',                name: 'Reign' },
+      { file: 'music/5-got-my-watch-has-ended.mp3',   name: 'My Watch Has Ended' },
     ]
   },
   lotr: {
     name: '💍 Lord of the Rings',
     tracks: [
-      { file: 'music/5-lotr-concerning-hobbits.mp3',  name: 'Concerning Hobbits' },
-      { file: 'music/6-lotr-bridge-of-khazad-dum.mp3',name: 'The Bridge of Khazad-dûm' },
-      { file: 'music/7-lotr-rohan-theme.mp3',          name: 'Rohan Theme' },
-      { file: 'music/8-lotr-fellowship.mp3',           name: 'The Fellowship of the Ring' },
-      { file: 'music/9-lotr-into-the-west.mp3',        name: 'Into the West' },
+      { file: 'music/1-lotr-the-one-ring-theme.mp3',  name: 'The One Ring Theme' },
+      { file: 'music/2-lotr-the-shire.mp3',           name: 'The Shire' },
+      { file: 'music/3-lotr-concerning-hobbits.mp3',  name: 'Concerning Hobbits' },
+      { file: 'music/4-lotr-rivendell.mp3',           name: 'Rivendell' },
+      { file: 'music/5-lotr-the-black-gate-opens.mp3',name: 'The Black Gate Opens' },
     ]
   },
   cotl: {
     name: '🐑 Cult of the Lamb',
     tracks: [
-      { file: 'music/10-cotl-praise-the-lamb.mp3',    name: 'Praise the Lamb' },
-      { file: 'music/11-cotl-anchordeep.mp3',          name: 'Anchordeep' },
-      { file: 'music/12-cotl-knucklebones.mp3',        name: 'Knucklebones' },
-      { file: 'music/13-cotl-narinder.mp3',            name: "Narinder's Theme" },
-      { file: 'music/14-cotl-crown-and-scepter.mp3',  name: 'Crown and Scepter' },
+      { file: 'music/1-cotl-praise-the-lamb.mp3',     name: 'Praise the Lamb' },
+      { file: 'music/2-cotl-work-and-worship.mp3',    name: 'Work and Worship' },
+      { file: 'music/3-cotl-knucklebones.mp3',        name: 'Knucklebones' },
+      { file: 'music/4-cotl-faith-up.mp3',            name: 'Faith Up' },
     ]
   },
   batman: {
     name: '🦇 Batman',
     tracks: [
-      { file: 'music/15-batman-overture.mp3',          name: 'The Dark Knight Overture' },
-      { file: 'music/16-batman-why-so-serious.mp3',    name: 'Why So Serious?' },
-      { file: 'music/17-batman-a-dark-knight.mp3',     name: 'A Dark Knight' },
-      { file: 'music/18-batman-like-a-dog.mp3',        name: 'Like a Dog Chasing Cars' },
-      { file: 'music/19-batman-harvey-two-face.mp3',   name: 'Harvey Two-Face' },
+      { file: 'music/1-batman-overture.mp3',                        name: 'Overture' },
+      { file: 'music/2-batman-a-new-villain-batman-drops-in.mp3',   name: 'A New Villain' },
+      { file: 'music/3-batman-begins.mp3',                          name: 'Batman Begins' },
+      { file: 'music/4-batman-a-dark-knight.mp3',                   name: 'A Dark Knight' },
+      { file: 'music/5-batman-like-a-dog.mp3',                      name: 'Like a Dog Chasing Cars' },
+    ]
+  },
+  tavern: {
+    name: '🎻 The Witcher',
+    loop: false,
+    tracks: [
+      { file: 'music/1-witcher-unreleased-gwent-track.mp3',     name: 'Unreleased Gwent Track' },
+      { file: 'music/2-witcher-back-on-path.mp3',               name: 'Back on the Path' },
+      { file: 'music/3-witcher-skellige-tavern-extended.mp3',   name: 'Skellige Tavern (Extended)' },
+      { file: 'music/4-witcher-the-nightingale.mp3',            name: 'The Nightingale' },
+      { file: "music/5-witcher-drink-up-there's-more.mp3",      name: "Drink Up, There's More" },
+      { file: "music/6-witcher-a-story-you-won't-believe.mp3",  name: "A Story You Won't Believe" },
+      { file: 'music/7-witcher-gwent-music-4.mp3',              name: 'Gwent Music 4' },
+      { file: 'music/8-witcher-the-mandragora.mp3',             name: 'The Mandragora' },
+      { file: 'music/9-witcher-another-round-for-everyone.mp3', name: 'Another Round for Everyone' },
     ]
   }
 };
@@ -1378,15 +1394,17 @@ window.toggleMusicBar = toggleMusicBar;
 
 function loadTrack(set, idx) {
   currentSet = set;
-  const tracks = MUSIC_SETS[set].tracks;
+  const setData = MUSIC_SETS[set];
+  const tracks = setData.tracks;
   if (!tracks || !tracks[idx]) return;
   currentTrackIdx = idx;
   const track = tracks[idx];
-  // Solo cargar si el archivo existe (fallback silencioso)
   audio.src = track.file;
+  audio.loop = !!setData.loop;
   audio.volume = parseFloat(document.getElementById('volume-slider').value);
   document.getElementById('track-name').textContent = track.name;
-  document.getElementById('track-set').textContent = MUSIC_SETS[set].name + ' · ' + (idx+1) + '/' + tracks.length;
+  const loopBadge = setData.loop ? ' 🔁' : '';
+  document.getElementById('track-set').textContent = setData.name + loopBadge + (tracks.length > 1 ? ' · ' + (idx+1) + '/' + tracks.length : '');
 }
 
 function togglePlay() {
@@ -1404,7 +1422,9 @@ function togglePlay() {
 window.togglePlay = togglePlay;
 
 function nextTrack() {
-  const tracks = MUSIC_SETS[currentSet].tracks;
+  const setData = MUSIC_SETS[currentSet];
+  if (setData.loop) return; // taberna en loop, no hay siguiente
+  const tracks = setData.tracks;
   let next = isShuffle
     ? Math.floor(Math.random() * tracks.length)
     : (currentTrackIdx + 1) % tracks.length;
@@ -1414,7 +1434,9 @@ function nextTrack() {
 window.nextTrack = nextTrack;
 
 function prevTrack() {
-  const tracks = MUSIC_SETS[currentSet].tracks;
+  const setData = MUSIC_SETS[currentSet];
+  if (setData.loop) return;
+  const tracks = setData.tracks;
   let prev = (currentTrackIdx - 1 + tracks.length) % tracks.length;
   loadTrack(currentSet, prev);
   if (isPlaying) audio.play().catch(() => {});
@@ -1447,8 +1469,10 @@ function setVolume(val) {
 }
 window.setVolume = setVolume;
 
-// Auto-siguiente track al terminar
-audio.addEventListener('ended', () => { nextTrack(); });
+// Auto-siguiente track al terminar (no aplica si es loop)
+audio.addEventListener('ended', () => {
+  if (!MUSIC_SETS[currentSet].loop) nextTrack();
+});
 
 // Cargar primer track de GOT al inicio y mostrar barra
 loadTrack('got', 0);
