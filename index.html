@@ -858,7 +858,7 @@ function renderKittensForm(area) {
           <option value="1">🥇 1º — 10 pts</option>
           <option value="2">🥈 2º — 6 pts</option>
           <option value="3">🥉 3º — 4 pts</option>
-          <option value="rest">💥 Eliminado — 2 pts</option>
+          <option value="rest" selected>💥 Eliminado — 2 pts</option>
         </select>
         <label class="bonus-label"><input type="checkbox" id="kbonus-${i}"> ⚡ +1 Venganza</label>
       </div>`).join('')}
@@ -880,7 +880,7 @@ function renderSaboteurForm(area) {
       <div class="player-position-row">
         <div class="player-pos-name">${p.name}</div>
         <select class="pos-select" id="sab-rol-${i}">
-          <option value="minero">⛏️ Minero</option>
+          <option value="minero" selected>⛏️ Minero</option>
           <option value="saboteador">🕵️ Saboteador</option>
           <option value="egoista">⭐ El Egoísta</option>
         </select>
@@ -898,7 +898,7 @@ function renderBahamasForm(area) {
           <option value="ganador">🏆 Ganador — 10 pts</option>
           <option value="fbi">🕵️ Victoria FBI — 15 pts</option>
           <option value="sobreviviente">🪂 Sobreviviente — 5 pts</option>
-          <option value="eliminado">💥 Eliminado — 2 pts</option>
+          <option value="eliminado" selected>💥 Eliminado — 2 pts</option>
         </select>
       </div>`).join('')}`;
 }
@@ -910,7 +910,7 @@ async function saveGame() {
   let results   = [];
 
   if (game === 'kittens') {
-    const positions = players.map((p,i) => document.getElementById('kpos-'+i)?.value || '');
+    const positions = players.map((p,i) => document.getElementById('kpos-'+i)?.value||'rest');
     if (positions.some(v => !v)) { showAlert(alertEl,'Asigná posición a todos los jugadores.','error'); return; }
     const topPos = positions.filter(v => ['1','2','3'].includes(v));
     if (new Set(topPos).size !== topPos.length) { showAlert(alertEl,'No puede haber dos jugadores en la misma posición del podio.','error'); return; }
@@ -1360,8 +1360,8 @@ const MUSIC_SETS = {
     name: '🎻 The Witcher',
     loop: false,
     tracks: [
-      { file: 'music/1-witcher-unreleased-gwent-track.mp3',     name: 'Unreleased Gwent Track' },
-      { file: 'music/2-witcher-back-on-path.mp3',               name: 'Back on the Path' },
+      { file: 'music/1-witcher-back-on-path.mp3',               name: 'Back on the Path' },
+      { file: 'music/2-witcher-unreleased-gwent-track.mp3',     name: 'Unreleased Gwent Track' },
       { file: 'music/3-witcher-skellige-tavern-extended.mp3',   name: 'Skellige Tavern (Extended)' },
       { file: 'music/4-witcher-the-nightingale.mp3',            name: 'The Nightingale' },
       { file: "music/5-witcher-drink-up-there's-more.mp3",      name: "Drink Up, There's More" },
