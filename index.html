@@ -237,14 +237,14 @@
 
   /* MUSIC PLAYER */
   .music-bar {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 40;
-    background: rgba(7,30,61,0.97);
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: 8px 16px;
     display: none;
     align-items: center;
     gap: 10px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 16px;
+    margin-bottom: 16px;
   }
   .music-bar.visible { display: flex; }
   .music-track-info { flex: 1; min-width: 0; }
@@ -261,11 +261,10 @@
   .music-toggle:hover { border-color: var(--accent); color: var(--accent); }
 
   @media (max-width: 640px) {
-    .music-bar { padding: 6px 10px; gap: 6px; }
+    .music-bar { padding: 8px 12px; gap: 6px; border-radius: 8px; }
     .music-vol { display: none; }
     .music-set-select { font-size: 10px; max-width: 90px; }
     #app { padding-bottom: 80px; }
-    #app.music-open { padding-top: 50px; }
   }
 
   ::-webkit-scrollbar { width: 6px; }
@@ -315,6 +314,31 @@
       <button class="logout-btn" onclick="doLogout()">Salir</button>
     </div>
   </header>
+
+  <!-- MUSIC PLAYER BAR -->
+  <div class="music-bar" id="music-bar">
+    <audio id="audio-player" preload="auto"></audio>
+    <div class="music-track-info">
+      <div class="music-track-name" id="track-name">— Sin música —</div>
+      <div class="music-track-set" id="track-set">Seleccioná un set</div>
+    </div>
+    <div class="music-controls">
+      <select class="music-set-select" id="music-set-select" onchange="changeSet()">
+        <option value="clasicos">⭐ Clásicos del Cine</option>
+        <option value="got">⚔️ Game of Thrones</option>
+        <option value="lotr">💍 Lord of the Rings</option>
+        <option value="batman">🦇 Batman</option>
+        <option value="tavern">🐺 The Witcher</option>
+        <option value="cotl">🐑 Cult of the Lamb</option>
+      </select>
+      <button class="music-btn" onclick="prevTrack()" title="Anterior">⏮</button>
+      <button class="music-btn" id="play-btn" onclick="togglePlay()" title="Play/Pause">▶</button>
+      <button class="music-btn" onclick="nextTrack()" title="Siguiente">⏭</button>
+      <button class="music-btn" id="shuffle-btn" onclick="toggleShuffle()" title="Aleatorio">🔀</button>
+      <input type="range" class="music-vol" id="volume-slider" min="0" max="1" step="0.05" value="0.5" oninput="setVolume(this.value)" />
+      <button class="music-btn" id="mute-btn" onclick="toggleMute()" title="Silenciar">🔊</button>
+    </div>
+  </div>
 
   <nav>
     <button class="active" onclick="showPanel('partida',this)"><span class="nav-icon">🎮</span><span class="nav-label">Registrar</span></button>
@@ -636,31 +660,6 @@
       <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Borra TODOS los datos. Irreversible.</p>
       <button class="btn btn-danger" onclick="resetAll()">🗑 BORRAR TODO Y EMPEZAR DE CERO</button>
     </div>
-  </div>
-</div>
-
-<!-- MUSIC PLAYER BAR -->
-<div class="music-bar" id="music-bar">
-  <audio id="audio-player" preload="auto"></audio>
-  <div class="music-track-info">
-    <div class="music-track-name" id="track-name">— Sin música —</div>
-    <div class="music-track-set" id="track-set">Seleccioná un set ↑</div>
-  </div>
-  <div class="music-controls">
-    <select class="music-set-select" id="music-set-select" onchange="changeSet()">
-      <option value="clasicos">⭐ Clásicos del Cine</option>
-      <option value="got">⚔️ Game of Thrones</option>
-      <option value="lotr">💍 Lord of the Rings</option>
-      <option value="batman">🦇 Batman</option>
-      <option value="tavern">🐺 The Witcher</option>
-      <option value="cotl">🐑 Cult of the Lamb</option>
-    </select>
-    <button class="music-btn" onclick="prevTrack()" title="Anterior">⏮</button>
-    <button class="music-btn" id="play-btn" onclick="togglePlay()" title="Play/Pause">▶</button>
-    <button class="music-btn" onclick="nextTrack()" title="Siguiente">⏭</button>
-    <button class="music-btn" id="shuffle-btn" onclick="toggleShuffle()" title="Aleatorio">🔀</button>
-    <input type="range" class="music-vol" id="volume-slider" min="0" max="1" step="0.05" value="0.5" oninput="setVolume(this.value)" />
-    <button class="music-btn" id="mute-btn" onclick="toggleMute()" title="Silenciar">🔊</button>
   </div>
 </div>
 
@@ -1418,9 +1417,6 @@ function toggleMusicBar() {
   bar.classList.toggle('visible', musicBarOpen);
   const btn = document.getElementById('music-toggle-btn');
   if (btn) btn.classList.toggle('active', musicBarOpen);
-  // En mobile agregamos padding arriba para que el contenido no quede tapado
-  const app = document.getElementById('app');
-  if (app) app.classList.toggle('music-open', musicBarOpen);
   if (musicBarOpen && !isPlaying) loadTrack(currentSet, 0);
 }
 window.toggleMusicBar = toggleMusicBar;
