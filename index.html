@@ -1340,7 +1340,7 @@ const MUSIC_SETS = {
       { file: 'music/2-clasicos-indiana-jones.mp3',      name: 'Indiana Jones — Raiders March' },
       { file: 'music/3-clasicos-jurassic-park.mp3',      name: 'Jurassic Park — Main Theme' },
       { file: 'music/4-clasicos-el-padrino.mp3',         name: 'El Padrino — Main Title' },
-      { file: 'music/5-clasicas-piratas-del-caribe.mp3', name: 'Piratas del Caribe — He\'s a Pirate' },
+      { file: 'music/5-clasicas-piratas-del-caribe.mp3', name: "Piratas del Caribe — He's a Pirate" },
       { file: 'music/6-clasicas-et.mp3',                 name: 'E.T. — Flying Theme' },
     ]
   },
@@ -1427,13 +1427,26 @@ function loadTrack(set, idx) {
   if (!tracks || !tracks[idx]) return;
   currentTrackIdx = idx;
   const track = tracks[idx];
-  audio.src = track.file;
+  audio.src = encodeURI(track.file);
   audio.loop = !!setData.loop;
   audio.volume = parseFloat(document.getElementById('volume-slider').value);
   document.getElementById('track-name').textContent = track.name;
   const loopBadge = setData.loop ? ' 🔁' : '';
   document.getElementById('track-set').textContent = setData.name + loopBadge + (tracks.length > 1 ? ' · ' + (idx+1) + '/' + tracks.length : '');
 }
+
+// Si un track falla, salta al siguiente automáticamente
+audio.addEventListener('error', () => {
+  console.warn('Track no disponible:', audio.src);
+  const tracks = MUSIC_SETS[currentSet].tracks;
+  if (tracks.length > 1) {
+    const next = (currentTrackIdx + 1) % tracks.length;
+    if (next !== currentTrackIdx) {
+      loadTrack(currentSet, next);
+      if (isPlaying) audio.play().catch(() => {});
+    }
+  }
+});
 
 function togglePlay() {
   if (!audio.src || audio.src === window.location.href) { loadTrack(currentSet, 0); }
