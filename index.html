@@ -1427,7 +1427,7 @@ function loadTrack(set, idx) {
   if (!tracks || !tracks[idx]) return;
   currentTrackIdx = idx;
   const track = tracks[idx];
-  audio.src = encodeURI(track.file);
+  audio.src = track.file;
   audio.loop = !!setData.loop;
   audio.volume = parseFloat(document.getElementById('volume-slider').value);
   document.getElementById('track-name').textContent = track.name;
@@ -1435,17 +1435,10 @@ function loadTrack(set, idx) {
   document.getElementById('track-set').textContent = setData.name + loopBadge + (tracks.length > 1 ? ' · ' + (idx+1) + '/' + tracks.length : '');
 }
 
-// Si un track falla, salta al siguiente automáticamente
+// Si un track falla, muestra error en el nombre pero NO salta al siguiente
 audio.addEventListener('error', () => {
   console.warn('Track no disponible:', audio.src);
-  const tracks = MUSIC_SETS[currentSet].tracks;
-  if (tracks.length > 1) {
-    const next = (currentTrackIdx + 1) % tracks.length;
-    if (next !== currentTrackIdx) {
-      loadTrack(currentSet, next);
-      if (isPlaying) audio.play().catch(() => {});
-    }
-  }
+  document.getElementById('track-name').textContent = '⚠️ Track no disponible';
 });
 
 function togglePlay() {
