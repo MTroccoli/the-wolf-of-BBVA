@@ -292,6 +292,7 @@
     <div id="login-error"></div>
     <div class="login-hint">
       Jugadores: contraseña <strong style="color:var(--accent)">fin2026</strong><br>
+      Visitantes: contraseña <strong style="color:var(--accent)">visitante</strong><br>
       Administrador: usuario <strong style="color:var(--accent)">admin</strong>
     </div>
   </div>
@@ -779,6 +780,11 @@ async function doLogin() {
     bootApp(); return;
   }
 
+  if (pass === 'visitante') {
+    currentUser = { name, isAdmin: false, isVisitor: true };
+    bootApp(); return;
+  }
+
   errEl.innerHTML = '<div class="login-error">Contraseña incorrecta. Consultá al organizador.</div>';
 }
 window.doLogin = doLogin;
@@ -787,11 +793,20 @@ function bootApp() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   document.getElementById('user-badge-header').textContent = currentUser.name.toUpperCase();
+  if (currentUser.isVisitor) {
+    document.getElementById('user-badge-header').style.opacity = '0.6';
+    document.getElementById('user-badge-header').title = 'Modo visitante — solo lectura';
+  }
   if (currentUser.isAdmin) {
     document.getElementById('admin-badge-header').style.display = 'inline-block';
     document.getElementById('admin-nav-btn').style.display = 'block';
   }
-  renderGameForm();
+  if (currentUser.isVisitor) {
+    document.querySelector('nav button').style.display = 'none';
+    showPanel('ranking', document.querySelectorAll('nav button')[2]);
+  } else {
+    renderGameForm();
+  }
 }
 
 function doLogout() {
