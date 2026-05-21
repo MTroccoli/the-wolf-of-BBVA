@@ -194,7 +194,8 @@
     .logout-btn { font-size: 11px; padding: 4px 9px; }
     .sync-bar { font-size: 9px; }
     .login-box { padding: 32px 22px; }
-    nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; border-radius: 0; border-left: none; border-right: none; border-bottom: none; border-top: 1px solid var(--border); margin-bottom: 0; padding: 6px 4px; background: rgba(7,30,61,0.97); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; border-radius: 0; border-left: none; border-right: none; border-bottom: none; border-top: 1px solid var(--border); margin-bottom: 0; padding: 6px 4px; background: rgba(7,30,61,0.97); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); transition: bottom 0.2s; }
+    nav.music-open { bottom: 48px; }
     nav button { font-size: 10px; padding: 8px 4px; display: flex; flex-direction: column; align-items: center; gap: 2px; border-radius: 8px; }
     nav button .nav-icon { font-size: 18px; line-height: 1; }
     nav button .nav-label { font-size: 9px; }
@@ -260,10 +261,17 @@
   .music-toggle:hover { border-color: var(--accent); color: var(--accent); }
 
   @media (max-width: 640px) {
-    .music-bar { padding: 6px 10px; gap: 6px; bottom: 56px; }
+    .music-bar {
+      position: fixed;
+      bottom: 56px;
+      left: 0; right: 0;
+      z-index: 45;
+      padding: 6px 10px;
+      gap: 6px;
+    }
     .music-vol { display: none; }
     .music-set-select { font-size: 10px; max-width: 90px; }
-    #app { padding-bottom: 120px; }
+    #app { padding-bottom: 130px; }
   }
 
   ::-webkit-scrollbar { width: 6px; }
@@ -1416,6 +1424,9 @@ function toggleMusicBar() {
   bar.classList.toggle('visible', musicBarOpen);
   const btn = document.getElementById('music-toggle-btn');
   if (btn) btn.classList.toggle('active', musicBarOpen);
+  // En mobile, subir el nav cuando la música está abierta
+  const nav = document.querySelector('nav');
+  if (nav) nav.classList.toggle('music-open', musicBarOpen);
   if (musicBarOpen && !isPlaying) loadTrack(currentSet, 0);
 }
 window.toggleMusicBar = toggleMusicBar;
@@ -1514,6 +1525,8 @@ document.getElementById('music-bar').classList.add('visible');
 musicBarOpen = true;
 const btn = document.getElementById('music-toggle-btn');
 if (btn) btn.classList.add('active');
+const nav = document.querySelector('nav');
+if (nav) nav.classList.add('music-open');
 
 </script>
 </body>
