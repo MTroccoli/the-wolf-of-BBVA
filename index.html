@@ -341,15 +341,15 @@
   </div>
 
   <nav>
-    <button class="active" onclick="showPanel('partida',this)"><span class="nav-icon">🎮</span><span class="nav-label">Registrar</span></button>
+    <button onclick="showPanel('partida',this)"><span class="nav-icon">🎮</span><span class="nav-label">Registrar</span></button>
     <button onclick="showPanel('historial',this)"><span class="nav-icon">📋</span><span class="nav-label">Historial</span></button>
-    <button onclick="showPanel('ranking',this)"><span class="nav-icon">🏆</span><span class="nav-label">Ranking</span></button>
+    <button class="active" onclick="showPanel('ranking',this)"><span class="nav-icon">🏆</span><span class="nav-label">Ranking</span></button>
     <button onclick="showPanel('reglas',this)"><span class="nav-icon">📖</span><span class="nav-label">Reglas</span></button>
     <button id="admin-nav-btn" onclick="showPanel('admin',this)" style="display:none"><span class="nav-icon">⚙️</span><span class="nav-label">Admin</span></button>
   </nav>
 
   <!-- REGISTRAR -->
-  <div class="panel active" id="panel-partida">
+  <div class="panel" id="panel-partida">
     <div class="card">
       <div class="card-title"><span>🎮</span> Nueva Partida</div>
       <div style="margin-bottom:16px">
@@ -373,7 +373,7 @@
   </div>
 
   <!-- RANKING -->
-  <div class="panel" id="panel-ranking">
+  <div class="panel active" id="panel-ranking">
     <div id="ranking-content"><div class="empty"><span class="big">TBD</span>Registrá partidas para ver el ranking.</div></div>
   </div>
 
@@ -871,11 +871,12 @@ function renderKittensForm(area) {
       <div class="player-position-row">
         <div class="player-pos-name">${p.name}</div>
         <select class="pos-select" id="kpos-${i}">
+          <option value="no" selected>— No participa — 0 pts</option>
           <option value="">— posición —</option>
           <option value="1">🥇 1º — 10 pts</option>
           <option value="2">🥈 2º — 6 pts</option>
           <option value="3">🥉 3º — 4 pts</option>
-          <option value="rest" selected>💥 Eliminado — 2 pts</option>
+          <option value="rest">💥 Eliminado — 2 pts</option>
         </select>
         <label class="bonus-label"><input type="checkbox" id="kbonus-${i}"> ⚡ +1 Venganza</label>
       </div>`).join('')}
@@ -897,7 +898,8 @@ function renderSaboteurForm(area) {
       <div class="player-position-row">
         <div class="player-pos-name">${p.name}</div>
         <select class="pos-select" id="sab-rol-${i}">
-          <option value="minero" selected>⛏️ Minero</option>
+          <option value="no" selected>— No participa — 0 pts</option>
+          <option value="minero">⛏️ Minero</option>
           <option value="saboteador">🕵️ Saboteador</option>
           <option value="egoista">⭐ El Egoísta</option>
         </select>
@@ -912,10 +914,11 @@ function renderBahamasForm(area) {
       <div class="player-position-row">
         <div class="player-pos-name">${p.name}</div>
         <select class="pos-select" id="bah-res-${i}">
+          <option value="no" selected>— No participa — 0 pts</option>
           <option value="ganador">🏆 Ganador — 10 pts</option>
           <option value="fbi">🕵️ Victoria FBI — 15 pts</option>
           <option value="sobreviviente">🪂 Sobreviviente — 5 pts</option>
-          <option value="eliminado" selected>💥 Eliminado — 2 pts</option>
+          <option value="eliminado">💥 Eliminado — 2 pts</option>
         </select>
       </div>`).join('')}`;
 }
@@ -927,13 +930,14 @@ async function saveGame() {
   let results   = [];
 
   if (game === 'kittens') {
-    const positions = players.map((p,i) => document.getElementById('kpos-'+i)?.value||'rest');
-    if (positions.some(v => !v)) { showAlert(alertEl,'Asigná posición a todos los jugadores.','error'); return; }
+    const positions = players.map((p,i) => document.getElementById('kpos-'+i)?.value||'no');
+    const ptsMap = {'1':10,'2':6,'3':4,'rest':2,'no':0};
     const topPos = positions.filter(v => ['1','2','3'].includes(v));
     if (new Set(topPos).size !== topPos.length) { showAlert(alertEl,'No puede haber dos jugadores en la misma posición del podio.','error'); return; }
-    const ptsMap = {'1':10,'2':6,'3':4,'rest':2};
     results = players.map((p,i) => {
-      const pos = positions[i], bonus = document.getElementById('kbonus-'+i)?.checked ? 1 : 0;
+      const pos = positions[i];
+      if (pos === 'no') return { player: p.name, pts: 0, label: '— No participó', bonus: '' };
+      const bonus = document.getElementById('kbonus-'+i)?.checked ? 1 : 0;
       const label = pos==='1'?'1º Puesto':pos==='2'?'2º Puesto':pos==='3'?'3º Puesto':'Eliminado';
       return { player: p.name, pts: ptsMap[pos]+bonus, label, bonus: bonus?'+1 Venganza':'' };
     });
@@ -941,6 +945,7 @@ async function saveGame() {
     const winner = document.getElementById('sab-winner').value;
     results = players.map((p,i) => {
       const rol      = document.getElementById('sab-rol-'+i).value;
+      if (rol === 'no') return { player: p.name, pts: 0, label: '— No participó', bonus: '' };
       const traidor  = document.getElementById('sab-traidor-'+i)?.checked;
       const isEgoista   = rol === 'egoista';
       const isSaboteador = rol === 'saboteador';
@@ -976,8 +981,8 @@ async function saveGame() {
       return { player: p.name, pts: won?8:2, label: won?'✅ Ganador':'❌ Perdedor', bonus: '' };
     });
   } else if (game === 'bahamas') {
-    const ptsMap   = {ganador:10, fbi:15, sobreviviente:5, eliminado:2};
-    const labelMap = {ganador:'🏆 Ganador', fbi:'🕵️ Victoria FBI', sobreviviente:'🪂 Sobreviviente', eliminado:'💥 Eliminado'};
+    const ptsMap   = {ganador:10, fbi:15, sobreviviente:5, eliminado:2, no:0};
+    const labelMap = {ganador:'🏆 Ganador', fbi:'🕵️ Victoria FBI', sobreviviente:'🪂 Sobreviviente', eliminado:'💥 Eliminado', no:'— No participó'};
     const ganadores = players.filter((p,i) => ['ganador','fbi'].includes(document.getElementById('bah-res-'+i).value));
     if (ganadores.length > 1) { showAlert(alertEl,'Solo puede haber 1 ganador en Bahamas.','error'); return; }
     results = players.map((p,i) => {
