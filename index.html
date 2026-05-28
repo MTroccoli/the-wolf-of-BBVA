@@ -1019,7 +1019,7 @@ window.saveGame = saveGame;
 
 // ── HISTORY ────────────────────────────────────────────────────────────
 function getResultEmoji(gameName, label) {
-  if (label.includes('No participó')) return '❌';
+  if (label.includes('No participó')) return '';
   if (gameName.includes('Exploding')) {
     if (label.includes('1º')) return '🥇';
     if (label.includes('2º')) return '🥈';
@@ -1055,7 +1055,9 @@ function renderHistory() {
       </div>
       <div class="history-results">${(h.results||[]).map(r=>{
         const emoji = getResultEmoji(h.game, r.label);
-        return `${emoji} <strong>${r.player}</strong>: <span style="color:var(--muted)">${r.pts} pts</span>${r.bonus?' <span style="color:var(--green)">('+r.bonus+')</span>':''}`;
+        const prefix = emoji ? emoji + ' ' : '';
+        const cleanLabel = r.label.replace(/^[✅❌⭐😢🏆🪂💥🕵️🥇🥈🥉—]\s*/u, '').trim();
+        return `${prefix}<strong>${r.player}</strong>: ${cleanLabel} → <span style="color:var(--accent)">${r.pts} pts</span>${r.bonus?' <span style="color:var(--green)">('+r.bonus+')</span>':''}`;
       }).join('<br>')}</div>
     </div>`).join('');
 }
