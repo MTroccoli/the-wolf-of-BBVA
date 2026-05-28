@@ -181,7 +181,8 @@
   .player-chip button:hover { color: var(--red); }
 
   /* MOBILE */
-  .rank-card { display: none; }
+  .nav-icon { font-size: 14px; line-height: 1; }
+  .nav-label { font-size: 13px; }
 
   @media (max-width: 640px) {
     #app { padding: 0 12px 80px; }
@@ -197,8 +198,10 @@
     nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; border-radius: 0; border-left: none; border-right: none; border-bottom: none; border-top: 1px solid var(--border); margin-bottom: 0; padding: 6px 4px; background: rgba(7,30,61,0.97); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); transition: bottom 0.2s; }
     nav.music-open { bottom: 48px; }
     nav button { font-size: 10px; padding: 8px 4px; display: flex; flex-direction: column; align-items: center; gap: 2px; border-radius: 8px; }
+    nav button { flex-direction: column; padding: 8px 4px; display: flex; align-items: center; gap: 2px; border-radius: 8px; }
     nav button .nav-icon { font-size: 18px; line-height: 1; }
     nav button .nav-label { font-size: 9px; }
+    .rank-card { display: none; }
     .card { padding: 14px 16px; border-radius: 10px; margin-bottom: 12px; }
     .card-title { font-size: 17px; margin-bottom: 12px; }
     .player-position-row { grid-template-columns: 1fr; gap: 8px; padding: 12px; }
@@ -341,7 +344,7 @@
   </div>
 
   <nav>
-    <button id="register-nav-btn" onclick="showPanel('partida',this)" style="display:none;flex-direction:column;align-items:center;gap:2px"><span class="nav-icon">🎮</span><span class="nav-label">Registrar</span></button>
+    <button id="register-nav-btn" onclick="showPanel('partida',this)" style="display:none"><span class="nav-icon">🎮</span><span class="nav-label">Registrar</span></button>
     <button onclick="showPanel('historial',this)"><span class="nav-icon">📋</span><span class="nav-label">Historial</span></button>
     <button class="active" onclick="showPanel('ranking',this)"><span class="nav-icon">🏆</span><span class="nav-label">Ranking</span></button>
     <button onclick="showPanel('reglas',this)"><span class="nav-icon">📖</span><span class="nav-label">Reglas</span></button>
