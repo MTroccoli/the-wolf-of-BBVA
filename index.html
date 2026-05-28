@@ -1055,7 +1055,7 @@ function renderHistory() {
       </div>
       <div class="history-results">${(h.results||[]).map(r=>{
         const emoji = getResultEmoji(h.game, r.label);
-        return `${emoji} <strong>${r.player}</strong>: ${r.label} → <span style="color:var(--accent)">${r.pts} pts</span>${r.bonus?' <span style="color:var(--green)">('+r.bonus+')</span>':''}`;
+        return `${emoji} <strong>${r.player}</strong>: <span style="color:var(--muted)">${r.pts} pts</span>${r.bonus?' <span style="color:var(--green)">('+r.bonus+')</span>':''}`;
       }).join('<br>')}</div>
     </div>`).join('');
 }
