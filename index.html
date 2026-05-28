@@ -1018,6 +1018,29 @@ async function saveGame() {
 window.saveGame = saveGame;
 
 // ── HISTORY ────────────────────────────────────────────────────────────
+function getResultEmoji(gameName, label) {
+  if (label.includes('No participó')) return '❌';
+  if (gameName.includes('Exploding')) {
+    if (label.includes('1º')) return '🥇';
+    if (label.includes('2º')) return '🥈';
+    if (label.includes('3º')) return '🥉';
+    return '💥';
+  }
+  if (gameName.includes('Saboteur')) {
+    if (label.includes('Egoísta')) return '⭐';
+    if (label.includes('traicionado')) return '😢';
+    if (label.includes('Ganador')) return '✅';
+    return '❌';
+  }
+  if (gameName.includes('Bahamas')) {
+    if (label.includes('FBI')) return '🕵️';
+    if (label.includes('Ganador')) return '🏆';
+    if (label.includes('Sobreviviente')) return '🪂';
+    return '💥';
+  }
+  return '';
+}
+
 function renderHistory() {
   const el = document.getElementById('history-list');
   if (history.length === 0) { el.innerHTML='<div class="empty"><span class="big">VACÍO</span>No hay partidas registradas.</div>'; return; }
@@ -1030,7 +1053,10 @@ function renderHistory() {
         </div>
         ${currentUser?.isAdmin ? `<button class="btn btn-danger btn-sm" onclick="deleteGame('${h.id}')">✕</button>` : ''}
       </div>
-      <div class="history-results">${(h.results||[]).map(r=>`${r.player}: ${r.label} → <span style="color:var(--accent)">${r.pts} pts</span>${r.bonus?' <span style="color:var(--green)">('+r.bonus+')</span>':''}`).join('<br>')}</div>
+      <div class="history-results">${(h.results||[]).map(r=>{
+        const emoji = getResultEmoji(h.game, r.label);
+        return `${emoji} <strong>${r.player}</strong>: ${r.label} → <span style="color:var(--accent)">${r.pts} pts</span>${r.bonus?' <span style="color:var(--green)">('+r.bonus+')</span>':''}`;
+      }).join('<br>')}</div>
     </div>`).join('');
 }
 
@@ -1249,10 +1275,13 @@ function editGame(id) {
   modal.style.cssText = `position:fixed;inset:0;z-index:200;background:rgba(4,15,32,0.9);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)`;
 
   modal.innerHTML = `
-    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;width:100%;max-width:520px;max-height:80vh;overflow-y:auto">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.06em;color:var(--accent);margin-bottom:16px">
-        ✏️ Editar — ${game.game}
-        <span style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-left:8px">${game.ts}</span>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;width:100%;max-width:520px;max-height:80vh;overflow-y:auto" onclick="event.stopPropagation()">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.06em;color:var(--accent)">
+          ✏️ Editar — ${game.game}
+          <span style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-left:8px">${game.ts}</span>
+        </div>
+        <button onclick="document.getElementById('edit-modal').remove()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:0 0 0 12px" title="Cerrar">✕</button>
       </div>
       ${(game.results||[]).map((r,i) => `
         <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(46,127,217,0.08);flex-wrap:wrap">
@@ -1265,10 +1294,13 @@ function editGame(id) {
           </div>
         </div>`).join('')}
       <div style="display:flex;gap:8px;margin-top:18px;justify-content:flex-end">
-        <button class="btn btn-ghost" onclick="document.getElementById('edit-modal').remove()">Cancelar</button>
-        <button class="btn btn-primary" onclick="saveEditGame('${id}',${(game.results||[]).length})">✔ Guardar cambios</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('edit-modal').remove()">✕ Cancelar</button>
+        <button class="btn btn-primary" onclick="saveEditGame('${id}',${(game.results||[]).length})">✔ Confirmar cambios</button>
       </div>
     </div>`;
+
+  // Click fuera del modal para cerrar
+  modal.addEventListener('click', () => modal.remove());
 
   document.body.appendChild(modal);
 }
