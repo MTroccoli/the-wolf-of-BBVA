@@ -341,7 +341,7 @@
   </div>
 
   <nav>
-    <button id="register-nav-btn" onclick="showPanel('partida',this)" style="display:none"><span class="nav-icon">🎮</span><span class="nav-label">Registrar</span></button>
+    <button id="register-nav-btn" onclick="showPanel('partida',this)" style="display:none;flex-direction:column;align-items:center;gap:2px"><span class="nav-icon">🎮</span><span class="nav-label">Registrar</span></button>
     <button onclick="showPanel('historial',this)"><span class="nav-icon">📋</span><span class="nav-label">Historial</span></button>
     <button class="active" onclick="showPanel('ranking',this)"><span class="nav-icon">🏆</span><span class="nav-label">Ranking</span></button>
     <button onclick="showPanel('reglas',this)"><span class="nav-icon">📖</span><span class="nav-label">Reglas</span></button>
@@ -794,18 +794,20 @@ function bootApp() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   document.getElementById('user-badge-header').textContent = currentUser.name.toUpperCase();
-  if (currentUser.isVisitor) {
-    document.getElementById('user-badge-header').style.opacity = '0.6';
-    document.getElementById('user-badge-header').title = 'Modo visitante — solo lectura';
-  }
+  // Reset todos los botones al estado base
+  document.getElementById('register-nav-btn').style.display = 'none';
+  document.getElementById('admin-nav-btn').style.display = 'none';
+  document.getElementById('admin-badge-header').style.display = 'none';
   if (currentUser.isAdmin) {
     document.getElementById('admin-badge-header').style.display = 'inline-block';
-    document.getElementById('admin-nav-btn').style.display = 'block';
-    document.getElementById('register-nav-btn').style.display = 'block';
+    document.getElementById('admin-nav-btn').style.display = 'flex';
+    document.getElementById('register-nav-btn').style.display = 'flex';
   }
   if (currentUser.isVisitor) {
-    showPanel('ranking', document.querySelectorAll('nav button')[2]);
+    document.getElementById('user-badge-header').style.opacity = '0.6';
   }
+  // Todos arrancan en ranking
+  showPanel('ranking', document.querySelector('nav button.active') || document.querySelectorAll('nav button')[1]);
 }
 
 function doLogout() {
@@ -998,6 +1000,7 @@ async function saveGame() {
     });
   }
 
+  if (!confirm('¿Confirmar el registro de esta partida?')) return;
   const gameNames = {kittens:'🐱 Exploding Kittens', saboteur:'⛏️ Saboteur', bahamas:'✈️ Bahamas'};
   try {
     await sbInsert('history', {
@@ -1033,7 +1036,7 @@ function renderHistory() {
 
 async function deleteGame(id) {
   if (!currentUser?.isAdmin) return;
-  if (!confirm('¿Eliminar esta partida?')) return;
+  if (!confirm('¿Eliminar esta partida del historial?')) return;
   try { await sbDelete('history', id); await fetchAll(); } catch(e) {}
 }
 window.deleteGame = deleteGame;
@@ -1197,7 +1200,7 @@ function renderAdmin() {
 }
 
 async function removePlayer(id, name) {
-  if (!confirm(`¿Eliminar a ${name}?`)) return;
+  if (!confirm(`¿Eliminar a ${name} de la jornada?\nSus resultados en partidas previas se conservan.`)) return;
   try {
     await sbDelete('players', id);
     const b = bonusPoints.find(x=>x.name===name);
@@ -1211,6 +1214,7 @@ window.removePlayer = removePlayer;
 
 async function applyBonus(playerName, idx) {
   const val = parseInt(document.getElementById('bonus-edit-'+idx).value)||0;
+  if (!confirm(`¿Aplicar ${val>0?'+':''}${val} pts extra a ${playerName}?`)) return;
   try {
     await sbUpsert('bonus', { name: playerName, pts: val });
     await fetchAll();
