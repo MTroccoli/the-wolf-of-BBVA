@@ -838,6 +838,8 @@ const PLAYER_PASS = 'fin2026';
 
 let currentUser = null;
 let players     = [];
+let sessions       = [];
+let currentSession = null;
 let history     = [];
 let bonusPoints = [];
 let pollInterval = null;
@@ -884,12 +886,22 @@ async function sbDeleteAll(table) {
 // ── POLLING (reemplaza tiempo real, funciona en todos los navegadores) ──
 async function fetchAll() {
   try {
+    let pUrl = `${SUPA_URL}/rest/v1/players?select=*`;
+    let hUrl = `${SUPA_URL}/rest/v1/history?select=*`;
+    let bUrl = `${SUPA_URL}/rest/v1/bonus?select=*`;
+    if (currentSession) {
+      pUrl += `&session_id=eq.${currentSession.id}`;
+      hUrl += `&session_id=eq.${currentSession.id}`;
+      bUrl += `&session_id=eq.${currentSession.id}`;
+    }
     const [p, h, b] = await Promise.all([
-      sbGet('players'), sbGet('history'), sbGet('bonus')
+      fetch(pUrl, { headers: HEADERS }).then(r => r.json()),
+      fetch(hUrl, { headers: HEADERS }).then(r => r.json()),
+      fetch(bUrl, { headers: HEADERS }).then(r => r.json()),
     ]);
-    players     = p || [];
-    history     = h || [];
-    bonusPoints = b || [];
+    players     = Array.isArray(p) ? p : [];
+    history     = Array.isArray(h) ? h : [];
+    bonusPoints = Array.isArray(b) ? b : [];
     setSyncStatus(true);
     refreshUI();
   } catch(e) {
@@ -930,22 +942,30 @@ async function doLogin() {
 
   if (!name) { errEl.innerHTML = '<div class="login-error">Ingresá tu nombre.</div>'; return; }
 
+  // Admin no necesita sesión
   if (name.toLowerCase() === ADMIN_USER && pass === ADMIN_PASS) {
     currentUser = { name: 'Administrador', isAdmin: true };
+    currentSession = null;
+    await fetchAll();
     bootApp(); return;
   }
 
-  if (pass === PLAYER_PASS) {
-    currentUser = { name, isAdmin: false };
-    const exists = players.some(p => p.name.toLowerCase() === name.toLowerCase());
-    if (!exists) {
-      try { await sbInsert('players', { name }); await fetchAll(); } catch(e) {}
+  // Jugador y visitante necesitan elegir sesión
+  if (pass === PLAYER_PASS || pass === 'visitante') {
+    const sessionId = document.getElementById('login-session')?.value;
+    if (!sessionId) { errEl.innerHTML = '<div class="login-error">Seleccioná una sesión. Si no hay ninguna, pedí al organizador que cree una.</div>'; return; }
+    const session = sessions.find(s => s.id === sessionId);
+    currentSession = session || null;
+    currentUser = { name, isAdmin: false, isVisitor: pass === 'visitante' };
+
+    if (pass === PLAYER_PASS) {
+      await fetchAll();
+      const exists = players.some(p => p.name.toLowerCase() === name.toLowerCase() && p.session_id === sessionId);
+      if (!exists) {
+        try { await sbInsert('players', { name, session_id: sessionId }); } catch(e) {}
+      }
     }
-    bootApp(); return;
-  }
-
-  if (pass === 'visitante') {
-    currentUser = { name, isAdmin: false, isVisitor: true };
+    await fetchAll();
     bootApp(); return;
   }
 
@@ -1535,9 +1555,6 @@ function showAlert(el, msg, type) {
 }
 
 // ── SESSIONS ───────────────────────────────────────────────────────────
-let sessions       = [];
-let currentSession = null;
-
 async function fetchSessions() {
   try {
     const r = await fetch(`${SUPA_URL}/rest/v1/sessions?select=*&order=created_at.asc`, { headers: HEADERS });
@@ -1611,28 +1628,6 @@ function updateSessionBadge() {
   if (currentSession) { el.textContent = '📌 ' + currentSession.name; el.style.display = 'inline-block'; }
   else el.style.display = 'none';
 }
-
-// Override fetchAll to filter by session
-const _origFetchAll = fetchAll;
-window.fetchAll = async function() {
-  try {
-    let pUrl = `${SUPA_URL}/rest/v1/players?select=*`;
-    let hUrl = `${SUPA_URL}/rest/v1/history?select=*`;
-    let bUrl = `${SUPA_URL}/rest/v1/bonus?select=*`;
-    if (currentSession) {
-      pUrl += `&session_id=eq.${currentSession.id}`;
-      hUrl += `&session_id=eq.${currentSession.id}`;
-      bUrl += `&session_id=eq.${currentSession.id}`;
-    }
-    const [p,h,b] = await Promise.all([
-      fetch(pUrl,{headers:HEADERS}).then(r=>r.json()),
-      fetch(hUrl,{headers:HEADERS}).then(r=>r.json()),
-      fetch(bUrl,{headers:HEADERS}).then(r=>r.json()),
-    ]);
-    players = p||[]; history = h||[]; bonusPoints = b||[];
-    setSyncStatus(true); refreshUI();
-  } catch(e) { setSyncStatus(false); }
-};
 
 // ── AVALON & SECRET HITLER FORMS ───────────────────────────────────────
 function renderAvalonForm(area) {
