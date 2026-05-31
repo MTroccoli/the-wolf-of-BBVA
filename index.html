@@ -294,6 +294,12 @@
       <input type="password" id="login-pass" placeholder="••••••••" autocomplete="off"
              onkeydown="if(event.key==='Enter')doLogin()" />
     </div>
+    <div class="login-field" id="session-field" style="display:none">
+      <label>Sesión</label>
+      <select id="login-session">
+        <option value="">Cargando sesiones...</option>
+      </select>
+    </div>
     <button class="login-btn" onclick="doLogin()">ENTRAR A LA JORNADA</button>
     <div id="login-error"></div>
     <div class="login-hint">
@@ -312,6 +318,7 @@
     </div>
     <div class="header-right">
       <div class="sync-bar"><span class="sync-dot" id="sync-dot"></span><span id="sync-text">EN VIVO</span></div>
+      <span id="session-badge" class="user-badge" style="border-color:rgba(255,209,102,0.35);color:#FFD166;display:none"></span>
       <span id="user-badge-header" class="user-badge"></span>
       <span id="admin-badge-header" class="admin-badge" style="display:none">⚡ ADMIN</span>
       <button class="music-toggle" onclick="toggleMusicBar()" id="music-toggle-btn">🎵 Música</button>
@@ -362,6 +369,8 @@
           <option value="kittens">🐱 Exploding Kittens</option>
           <option value="saboteur">⛏️ Saboteur</option>
           <option value="bahamas">✈️ Bahamas</option>
+          <option value="avalon">🏰 Avalon</option>
+          <option value="hitler">🎭 Secret Hitler</option>
         </select>
       </div>
       <div id="game-form-area"></div>
@@ -400,6 +409,16 @@
         <div class="game-btn-icon">✈️</div>
         <div class="game-btn-name">Bahamas</div>
         <div class="game-btn-sub">Dados y robo</div>
+      </button>
+      <button class="game-btn" id="gbtn-avalon" onclick="selectGame('avalon')">
+        <div class="game-btn-icon">🏰</div>
+        <div class="game-btn-name">Avalon</div>
+        <div class="game-btn-sub">Bien vs Mal</div>
+      </button>
+      <button class="game-btn" id="gbtn-hitler" onclick="selectGame('hitler')">
+        <div class="game-btn-icon">🎭</div>
+        <div class="game-btn-name">Secret Hitler</div>
+        <div class="game-btn-sub">Liberales vs Fascistas</div>
       </button>
     </div>
 
@@ -618,6 +637,137 @@
       <a href="https://www.tranjis.com/bahamas" target="_blank" class="rules-link-btn" style="margin-bottom:16px">📄 Ver reglas oficiales →</a>
     </div>
 
+    <!-- AVALON -->
+    <div id="rules-avalon" style="display:none">
+      <div class="accordion-item">
+        <button class="accordion-btn open" onclick="toggleAccordion('av-obj')"><span>🎯 Objetivo y preparación</span><span class="accordion-arrow open" id="arrow-av-obj">▼</span></button>
+        <div class="accordion-body" id="acc-av-obj">
+          <div class="rules-section" style="margin-top:12px">
+            <p class="rules-text">El equipo del <strong>Bien</strong> intenta completar 3 misiones. El equipo del <strong>Mal</strong> intenta sabotear 3 misiones sin ser descubiertos. Al final, si el Mal pierde, puede ganar adivinando quién es <strong>Merlín</strong>.</p>
+            <div class="rules-table" style="margin-top:10px">
+              <div class="rules-table-row header"><span>Jugadores</span><span>Bien</span><span>Mal</span></div>
+              <div class="rules-table-row"><span>5</span><span>3</span><span>2</span></div>
+              <div class="rules-table-row"><span>6</span><span>4</span><span>2</span></div>
+              <div class="rules-table-row"><span>7</span><span>4</span><span>3</span></div>
+              <div class="rules-table-row"><span>8-9</span><span>5</span><span>3</span></div>
+              <div class="rules-table-row"><span>10</span><span>6</span><span>4</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-btn" onclick="toggleAccordion('av-roles')"><span>🎭 Roles especiales</span><span class="accordion-arrow" id="arrow-av-roles">▼</span></button>
+        <div class="accordion-body" id="acc-av-roles" style="display:none">
+          <div class="card-list" style="margin-top:12px">
+            <div class="card-item"><span class="card-name">🧙 Merlín (Bien)</span><span class="card-desc">Conoce a todos los agentes del Mal. Si el Bien completa 3 misiones pero el Asesino adivina quién es Merlín, el Mal gana.</span></div>
+            <div class="card-item"><span class="card-name">🔮 Percival (Bien)</span><span class="card-desc">Conoce quiénes son Merlín y Morgana, pero no sabe cuál es cuál.</span></div>
+            <div class="card-item"><span class="card-name">🗡️ Asesino (Mal)</span><span class="card-desc">Al final, si el Mal perdió, puede intentar adivinar quién es Merlín. Si acierta, el Mal gana.</span></div>
+            <div class="card-item"><span class="card-name">🦹 Morgana (Mal)</span><span class="card-desc">Aparece como Merlín ante los ojos de Percival, creando confusión.</span></div>
+            <div class="card-item"><span class="card-name">😈 Mordred (Mal)</span><span class="card-desc">Merlín no lo conoce. Es el agente del Mal más peligroso.</span></div>
+            <div class="card-item"><span class="card-name">👻 Oberón (Mal)</span><span class="card-desc">No conoce a sus compañeros del Mal ni ellos lo conocen a él.</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-btn" onclick="toggleAccordion('av-play')"><span>🔄 Cómo se juega</span><span class="accordion-arrow" id="arrow-av-play">▼</span></button>
+        <div class="accordion-body" id="acc-av-play" style="display:none">
+          <p class="rules-text" style="margin-top:12px">El líder propone un equipo para la misión. <strong>Todos votan</strong> si aprueban o rechazan el equipo. Si se rechaza 5 veces seguidas, el Mal gana automáticamente.<br><br>
+          Si se aprueba, los miembros del equipo votan en secreto <strong>Éxito</strong> o <strong>Sabotaje</strong>. El Bien solo puede votar Éxito. El Mal puede elegir.<br><br>
+          <strong>Misión exitosa:</strong> ningún voto de Sabotaje (en misión 4 con 7+ jugadores se necesitan 2 sabotajes para fallar).<br><br>
+          <strong>Misión fallida:</strong> al menos 1 voto de Sabotaje. Se juegan 5 misiones. Gana quien complete 3 primero.</p>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-btn" onclick="toggleAccordion('av-pts')"><span>🏆 Puntos en la jornada</span><span class="accordion-arrow" id="arrow-av-pts">▼</span></button>
+        <div class="accordion-body" id="acc-av-pts" style="display:none">
+          <div style="margin-top:12px">
+            <div class="rule-row"><span>Equipo del Mal gana (3 misiones saboteadas o Asesino adivina a Merlín)</span><span class="rule-pts">12 PTS</span></div>
+            <div class="rule-row"><span>Equipo del Bien gana (3 misiones exitosas)</span><span class="rule-pts">8 PTS</span></div>
+            <div class="rule-row"><span>Equipo Perdedor</span><span class="rule-pts">2 PTS</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-btn" onclick="toggleAccordion('av-faq')"><span>❓ FAQ</span><span class="accordion-arrow" id="arrow-av-faq">▼</span></button>
+        <div class="accordion-body" id="acc-av-faq" style="display:none">
+          <div class="faq-list" style="margin-top:12px">
+            <div class="faq-item"><div class="faq-q">¿Merlín puede revelar su identidad?</div><div class="faq-a">Puede dar pistas pero si el Asesino lo identifica al final, el Mal gana aunque hayan perdido las misiones.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Qué pasa si se rechazan 5 propuestas seguidas?</div><div class="faq-a">El Mal gana automáticamente, sin importar el estado de las misiones.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Oberón puede sabotear misiones?</div><div class="faq-a">Sí. Aunque no conoce a sus compañeros, sigue siendo del Mal y puede votar Sabotaje.</div></div>
+            <div class="faq-item"><div class="faq-q">¿El Asesino puede adivinar aunque no estuviera en la misión?</div><div class="faq-a">Sí. Al final de la partida, si el Bien ganó las misiones, el Asesino tiene una oportunidad de señalar a Merlín.</div></div>
+          </div>
+        </div>
+      </div>
+      <a href="https://www.ultraboardgames.com/avalon/game-rules.php" target="_blank" class="rules-link-btn" style="margin-bottom:16px">📄 Ver reglas oficiales →</a>
+    </div>
+
+    <!-- SECRET HITLER -->
+    <div id="rules-hitler" style="display:none">
+      <div class="accordion-item">
+        <button class="accordion-btn open" onclick="toggleAccordion('sh-obj')"><span>🎯 Objetivo y preparación</span><span class="accordion-arrow open" id="arrow-sh-obj">▼</span></button>
+        <div class="accordion-body" id="acc-sh-obj">
+          <div class="rules-section" style="margin-top:12px">
+            <p class="rules-text">Los <strong>Liberales</strong> ganan aprobando 5 políticas liberales o eliminando a Hitler. Los <strong>Fascistas</strong> ganan aprobando 6 políticas fascistas o eligiendo a Hitler como Canciller después de que se aprobaron 3 políticas fascistas.</p>
+            <div class="rules-table" style="margin-top:10px">
+              <div class="rules-table-row header"><span>Jugadores</span><span>Liberales</span><span>Fascistas</span><span>Hitler</span></div>
+              <div class="rules-table-row"><span>5-6</span><span>3-4</span><span>1-2</span><span>1</span></div>
+              <div class="rules-table-row"><span>7-8</span><span>4-5</span><span>2-3</span><span>1</span></div>
+              <div class="rules-table-row"><span>9-10</span><span>5-6</span><span>3-4</span><span>1</span></div>
+            </div>
+            <p class="rules-text" style="margin-top:10px">Hitler no conoce a los fascistas (en partidas de 5-6 sí los conoce). Los fascistas conocen a Hitler. Los liberales no saben nada.</p>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-btn" onclick="toggleAccordion('sh-play')"><span>🔄 Cómo se juega</span><span class="accordion-arrow" id="arrow-sh-play">▼</span></button>
+        <div class="accordion-body" id="acc-sh-play" style="display:none">
+          <p class="rules-text" style="margin-top:12px">Cada ronda el <strong>Presidente</strong> elige un <strong>Canciller</strong>. Todos votan Ja (sí) o Nein (no) para aprobar el gobierno. Si se rechaza 3 veces seguidas, se aprueba la política del tope del mazo automáticamente.<br><br>
+          Si se aprueba: el Presidente roba 3 políticas, descarta 1 y pasa 2 al Canciller. El Canciller descarta 1 y aprueba la restante.<br><br>
+          <strong>Poderes presidenciales</strong> (se activan al aprobar ciertas políticas fascistas):</p>
+          <div class="card-list" style="margin-top:8px">
+            <div class="card-item"><span class="card-name">🔍 Investigar lealtad</span><span class="card-desc">El Presidente ve la afiliación de un jugador (Liberal o Fascista, no el rol exacto).</span></div>
+            <div class="card-item"><span class="card-name">📋 Convocar elección especial</span><span class="card-desc">El Presidente elige al próximo Presidente, saltando el orden normal.</span></div>
+            <div class="card-item"><span class="card-name">👁️ Ver las políticas</span><span class="card-desc">El Presidente mira las 3 cartas superiores del mazo.</span></div>
+            <div class="card-item"><span class="card-name">🔫 Ejecutar</span><span class="card-desc">El Presidente elimina a un jugador. Si es Hitler, los Liberales ganan. Si no, ese jugador sale del juego.</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-btn" onclick="toggleAccordion('sh-win')"><span>🏁 Condiciones de victoria</span><span class="accordion-arrow" id="arrow-sh-win">▼</span></button>
+        <div class="accordion-body" id="acc-sh-win" style="display:none">
+          <div class="card-list" style="margin-top:12px">
+            <div class="card-item"><span class="card-name">🔵 Liberales ganan si...</span><span class="card-desc">Aprueban 5 políticas liberales, O eliminan a Hitler con el poder de Ejecutar.</span></div>
+            <div class="card-item"><span class="card-name">🔴 Fascistas ganan si...</span><span class="card-desc">Aprueban 6 políticas fascistas, O eligen a Hitler como Canciller después de que ya se aprobaron 3 políticas fascistas.</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-btn" onclick="toggleAccordion('sh-pts')"><span>🏆 Puntos en la jornada</span><span class="accordion-arrow" id="arrow-sh-pts">▼</span></button>
+        <div class="accordion-body" id="acc-sh-pts" style="display:none">
+          <div style="margin-top:12px">
+            <div class="rule-row"><span>Fascistas ganan</span><span class="rule-pts">12 PTS</span></div>
+            <div class="rule-row"><span>Liberales ganan</span><span class="rule-pts">8 PTS</span></div>
+            <div class="rule-row"><span>Equipo Perdedor</span><span class="rule-pts">2 PTS</span></div>
+            <div class="rule-row"><span style="color:var(--green)">⚡ Bonus: Liberal que ejecutó a Hitler</span><span class="rule-pts" style="color:var(--green)">+2 PTS</span></div>
+            <div class="rule-row"><span style="color:var(--green)">⭐ Bonus: Hitler elegido Canciller (con 3 pol. fascistas)</span><span class="rule-pts" style="color:var(--green)">+2 PTS</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-btn" onclick="toggleAccordion('sh-faq')"><span>❓ FAQ</span><span class="accordion-arrow" id="arrow-sh-faq">▼</span></button>
+        <div class="accordion-body" id="acc-sh-faq" style="display:none">
+          <div class="faq-list" style="margin-top:12px">
+            <div class="faq-item"><div class="faq-q">¿Hitler sabe quiénes son los fascistas?</div><div class="faq-a">Solo en partidas de 5-6 jugadores. De 7 en adelante, Hitler no conoce a sus compañeros fascistas.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Qué pasa si se ejecuta a Hitler antes de 3 políticas fascistas?</div><div class="faq-a">Los Liberales ganan igualmente. Ejecutar a Hitler siempre es victoria liberal sin importar el momento.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Se puede votar Nein a tu propio gobierno?</div><div class="faq-a">Sí. A veces conviene rechazar para no quemar credibilidad.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Los jugadores eliminados siguen en el juego?</div><div class="faq-a">No. Un jugador ejecutado sale permanentemente y no puede hablar ni votar.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Puede el Canciller mentir sobre las cartas que recibió?</div><div class="faq-a">Sí, no hay obligación de decir la verdad. El bluff es parte del juego.</div></div>
+          </div>
+        </div>
+      </div>
+      <a href="https://www.secrethitler.com/assets/Secret_Hitler_Rules.pdf" target="_blank" class="rules-link-btn" style="margin-bottom:16px">📄 Ver reglas oficiales →</a>
+    </div>
+
     <!-- PREGUNTAS DE JUGADORES -->
     <div class="card" style="margin-top:8px">
       <div class="card-title"><span>💬</span> Preguntas de jugadores</div>
@@ -646,8 +796,16 @@
 
     <!-- ADMIN -->
   <div class="panel" id="panel-admin">
-    <div class="admin-section">
-      <div class="admin-section-title">👥 Jugadores registrados</div>
+    <div class="admin-section" style="border-color:rgba(255,209,102,0.3)">
+      <div class="admin-section-title" style="color:#FFD166">🗂️ Gestión de Sesiones</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Creá sesiones para separar diferentes jornadas. Los jugadores eligen la sesión al loguearse.</p>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <input type="text" id="new-session-name" placeholder="Nombre de la sesión..." style="flex:1" />
+        <button class="btn btn-primary" onclick="createSession()">+ Crear</button>
+      </div>
+      <div id="sessions-list"><div style="color:var(--muted);font-size:13px">No hay sesiones creadas.</div></div>
+      <div id="session-alert"></div>
+    </div>
       <div id="admin-user-list"><div style="color:var(--muted);font-size:13px">Nadie se ha logueado todavía.</div></div>
     </div>
     <div class="admin-section">
@@ -760,6 +918,7 @@ function stopPolling() {
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('login-screen').style.display = 'flex';
   startPolling();
+  loadLoginSessions();
 });
 
 // ── LOGIN ──────────────────────────────────────────────────────────────
@@ -798,7 +957,6 @@ function bootApp() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   document.getElementById('user-badge-header').textContent = currentUser.name.toUpperCase();
-  // Reset todos los botones al estado base
   document.getElementById('register-nav-btn').style.display = 'none';
   document.getElementById('admin-nav-btn').style.display = 'none';
   document.getElementById('admin-badge-header').style.display = 'none';
@@ -810,7 +968,7 @@ function bootApp() {
   if (currentUser.isVisitor) {
     document.getElementById('user-badge-header').style.opacity = '0.6';
   }
-  // Todos arrancan en ranking
+  updateSessionBadge();
   showPanel('ranking', document.querySelector('nav button.active') || document.querySelectorAll('nav button')[1]);
 }
 
@@ -865,6 +1023,8 @@ function renderGameForm() {
   if (game === 'kittens')       renderKittensForm(area);
   else if (game === 'saboteur') renderSaboteurForm(area);
   else if (game === 'bahamas')  renderBahamasForm(area);
+  else if (game === 'avalon')   renderAvalonForm(area);
+  else if (game === 'hitler')   renderHitlerForm(area);
 }
 window.renderGameForm = renderGameForm;
 
@@ -1002,16 +1162,39 @@ async function saveGame() {
       const res = document.getElementById('bah-res-'+i).value;
       return { player: p.name, pts: ptsMap[res], label: labelMap[res], bonus: '' };
     });
+  } else if (game === 'avalon') {
+    const winner = document.getElementById('av-winner').value;
+    results = players.map((p,i) => {
+      const rol = document.getElementById('av-rol-'+i).value;
+      if (rol === 'no') return { player: p.name, pts: 0, label: '— No participó', bonus: '' };
+      const won = (winner==='mal'&&rol==='mal')||(winner==='bien'&&rol==='bien');
+      return { player: p.name, pts: won?(winner==='mal'?12:8):2, label: won?`✅ Ganador (${rol==='mal'?'Mal':'Bien'})`:'❌ Perdedor', bonus: '' };
+    });
+  } else if (game === 'hitler') {
+    const winner = document.getElementById('sh-winner').value;
+    results = players.map((p,i) => {
+      const rol    = document.getElementById('sh-rol-'+i).value;
+      if (rol === 'no') return { player: p.name, pts: 0, label: '— No participó', bonus: '' };
+      const bonus  = document.getElementById('sh-bonus-'+i)?.checked ? 2 : 0;
+      const isFasc = rol==='fascista'||rol==='hitler';
+      const won    = (winner==='fascistas'&&isFasc)||(winner==='liberales'&&rol==='liberal');
+      const base   = won?(winner==='fascistas'?12:8):2;
+      const bonusLabel = bonus?(rol==='liberal'?'+2 Ejecutó a Hitler':'+2 Hitler Canciller'):'';
+      const label  = rol==='hitler'?(won?'🎭 Hitler (Fascistas ganaron)':'🎭 Hitler (Fascistas perdieron)'):(won?`✅ Ganador (${rol==='fascista'?'Fascista':'Liberal'})`:'❌ Perdedor');
+      return { player: p.name, pts: base+bonus, label, bonus: bonusLabel };
+    });
   }
 
   if (!confirm('¿Confirmar el registro de esta partida?')) return;
-  const gameNames = {kittens:'🐱 Exploding Kittens', saboteur:'⛏️ Saboteur', bahamas:'✈️ Bahamas'};
+  const gameNames = {kittens:'🐱 Exploding Kittens', saboteur:'⛏️ Saboteur', bahamas:'✈️ Bahamas', avalon:'🏰 Avalon', hitler:'🎭 Secret Hitler'};
   try {
-    await sbInsert('history', {
-      game: gameNames[game], results: results,
+    const data = {
+      game: gameNames[game], results,
       by: currentUser.name,
       ts: new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'})
-    });
+    };
+    if (currentSession) data.session_id = currentSession.id;
+    await sbInsert('history', data);
     await fetchAll();
     showAlert(alertEl,'¡Partida guardada! 🎉','success');
     renderGameForm();
@@ -1036,7 +1219,17 @@ function getResultEmoji(gameName, label) {
     if (label.includes('Ganador')) return '✅';
     return '❌';
   }
-  if (gameName.includes('Bahamas')) {
+  if (gameName.includes('Avalon')) {
+    if (label.includes('Ganador') && label.includes('Mal')) return '😈';
+    if (label.includes('Ganador') && label.includes('Bien')) return '✨';
+    return '❌';
+  }
+  if (gameName.includes('Hitler')) {
+    if (label.includes('Hitler')) return '🎭';
+    if (label.includes('Ganador') && label.includes('Fascista')) return '🔴';
+    if (label.includes('Ganador') && label.includes('Liberal')) return '🔵';
+    return '❌';
+  }
     if (label.includes('FBI')) return '🕵️';
     if (label.includes('Ganador')) return '🏆';
     if (label.includes('Sobreviviente')) return '🪂';
@@ -1155,6 +1348,7 @@ function renderRanking() {
 // ── ADMIN ──────────────────────────────────────────────────────────────
 function renderAdmin() {
   if (!currentUser?.isAdmin) return;
+  renderSessionsList();
 
   const uEl = document.getElementById('admin-user-list');
   uEl.innerHTML = players.length === 0
@@ -1340,6 +1534,154 @@ function showAlert(el, msg, type) {
   setTimeout(() => { el.innerHTML = ''; }, 3500);
 }
 
+// ── SESSIONS ───────────────────────────────────────────────────────────
+let sessions       = [];
+let currentSession = null;
+
+async function fetchSessions() {
+  try {
+    const r = await fetch(`${SUPA_URL}/rest/v1/sessions?select=*&order=created_at.asc`, { headers: HEADERS });
+    if (r.ok) sessions = await r.json();
+  } catch(e) {}
+}
+
+async function loadLoginSessions() {
+  await fetchSessions();
+  const active = sessions.filter(s => s.active);
+  const sel   = document.getElementById('login-session');
+  const field = document.getElementById('session-field');
+  if (!sel || !field) return;
+  if (active.length === 0) {
+    sel.innerHTML = '<option value="">No hay sesiones activas</option>';
+    field.style.display = 'block';
+  } else {
+    sel.innerHTML = active.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+    field.style.display = 'block';
+  }
+}
+
+async function createSession() {
+  const name    = document.getElementById('new-session-name').value.trim();
+  const alertEl = document.getElementById('session-alert');
+  if (!name) { showAlert(alertEl,'Ingresá un nombre.','error'); return; }
+  if (!confirm(`¿Crear sesión "${name}"?`)) return;
+  try {
+    await sbInsert('sessions', { name, active: true });
+    document.getElementById('new-session-name').value = '';
+    await fetchSessions();
+    renderSessionsList();
+    showAlert(alertEl, `Sesión "${name}" creada ✔`, 'success');
+  } catch(e) { showAlert(alertEl,'Error al crear.','error'); }
+}
+window.createSession = createSession;
+
+async function toggleSession(id, active) {
+  if (!confirm(`¿${active?'Activar':'Desactivar'} esta sesión?`)) return;
+  await fetch(`${SUPA_URL}/rest/v1/sessions?id=eq.${id}`, {
+    method:'PATCH', headers:{...HEADERS,'Prefer':'return=representation'},
+    body: JSON.stringify({ active })
+  });
+  await fetchSessions(); renderSessionsList();
+}
+window.toggleSession = toggleSession;
+
+async function deleteSession(id, name) {
+  if (!confirm(`¿Eliminar la sesión "${name}"?\nSe eliminarán todos sus datos.`)) return;
+  await fetch(`${SUPA_URL}/rest/v1/sessions?id=eq.${id}`, { method:'DELETE', headers: HEADERS });
+  await fetchSessions(); renderSessionsList();
+}
+window.deleteSession = deleteSession;
+
+function renderSessionsList() {
+  const el = document.getElementById('sessions-list');
+  if (!el) return;
+  if (sessions.length === 0) { el.innerHTML = '<div style="color:var(--muted);font-size:13px">No hay sesiones creadas.</div>'; return; }
+  el.innerHTML = sessions.map(s => `
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(46,127,217,0.1);flex-wrap:wrap">
+      <span style="flex:1;font-size:14px;font-weight:500">${s.name}</span>
+      <span style="font-size:10px;font-family:'DM Mono',monospace;padding:2px 8px;border-radius:10px;${s.active?'background:rgba(41,217,133,0.12);color:var(--green);border:1px solid rgba(41,217,133,0.3)':'background:rgba(255,94,94,0.1);color:var(--red);border:1px solid rgba(255,94,94,0.2)'}">${s.active?'ACTIVA':'INACTIVA'}</span>
+      <button class="btn btn-ghost btn-sm" onclick="toggleSession('${s.id}',${!s.active})">${s.active?'Desactivar':'Activar'}</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteSession('${s.id}','${s.name.replace(/'/g,"\\'")}')">✕</button>
+    </div>`).join('');
+}
+
+function updateSessionBadge() {
+  const el = document.getElementById('session-badge');
+  if (!el) return;
+  if (currentSession) { el.textContent = '📌 ' + currentSession.name; el.style.display = 'inline-block'; }
+  else el.style.display = 'none';
+}
+
+// Override fetchAll to filter by session
+const _origFetchAll = fetchAll;
+window.fetchAll = async function() {
+  try {
+    let pUrl = `${SUPA_URL}/rest/v1/players?select=*`;
+    let hUrl = `${SUPA_URL}/rest/v1/history?select=*`;
+    let bUrl = `${SUPA_URL}/rest/v1/bonus?select=*`;
+    if (currentSession) {
+      pUrl += `&session_id=eq.${currentSession.id}`;
+      hUrl += `&session_id=eq.${currentSession.id}`;
+      bUrl += `&session_id=eq.${currentSession.id}`;
+    }
+    const [p,h,b] = await Promise.all([
+      fetch(pUrl,{headers:HEADERS}).then(r=>r.json()),
+      fetch(hUrl,{headers:HEADERS}).then(r=>r.json()),
+      fetch(bUrl,{headers:HEADERS}).then(r=>r.json()),
+    ]);
+    players = p||[]; history = h||[]; bonusPoints = b||[];
+    setSyncStatus(true); refreshUI();
+  } catch(e) { setSyncStatus(false); }
+};
+
+// ── AVALON & SECRET HITLER FORMS ───────────────────────────────────────
+function renderAvalonForm(area) {
+  area.innerHTML = `
+    <div class="section-label" style="margin-top:0">Resultado</div>
+    <div style="margin-bottom:14px">
+      <div class="form-label">¿Quién ganó?</div>
+      <select id="av-winner">
+        <option value="mal">😈 El Mal ganó</option>
+        <option value="bien">✨ El Bien ganó</option>
+      </select>
+    </div>
+    <div class="section-label">Rol de cada jugador</div>
+    ${players.map((p,i) => `
+      <div class="player-position-row">
+        <div class="player-pos-name">${p.name}</div>
+        <select class="pos-select" id="av-rol-${i}">
+          <option value="no" selected>❌ No participa</option>
+          <option value="bien">✨ Bien</option>
+          <option value="mal">😈 Mal</option>
+        </select>
+      </div>`).join('')}`;
+}
+
+function renderHitlerForm(area) {
+  area.innerHTML = `
+    <div class="section-label" style="margin-top:0">Resultado</div>
+    <div style="margin-bottom:14px">
+      <div class="form-label">¿Quién ganó?</div>
+      <select id="sh-winner">
+        <option value="fascistas">🔴 Fascistas ganan</option>
+        <option value="liberales">🔵 Liberales ganan</option>
+      </select>
+    </div>
+    <div class="section-label">Rol de cada jugador</div>
+    ${players.map((p,i) => `
+      <div class="player-position-row">
+        <div class="player-pos-name">${p.name}</div>
+        <select class="pos-select" id="sh-rol-${i}">
+          <option value="no" selected>❌ No participa</option>
+          <option value="liberal">🔵 Liberal</option>
+          <option value="fascista">🔴 Fascista</option>
+          <option value="hitler">🎭 Hitler</option>
+        </select>
+        <label class="bonus-label"><input type="checkbox" id="sh-bonus-${i}"> ⚡ +2 Bonus</label>
+      </div>`).join('')}
+    <div style="font-size:12px;color:var(--muted);margin:4px 0 14px">💡 Liberal: +2 si ejecutó a Hitler · Hitler: +2 si fue elegido Canciller con 3 pol. fascistas</div>`;
+}
+
 // ── ACCORDION ──────────────────────────────────────────────────────────
 function toggleAccordion(id) {
   const body  = document.getElementById('acc-' + id);
@@ -1355,9 +1697,11 @@ window.toggleAccordion = toggleAccordion;
 
 // ── GAME SELECTOR ──────────────────────────────────────────────────────
 function selectGame(id) {
-  ['ek','sab','bah'].forEach(g => {
-    document.getElementById('rules-' + g).style.display = g === id ? 'block' : 'none';
-    document.getElementById('gbtn-' + g).classList.toggle('active', g === id);
+  ['ek','sab','bah','avalon','hitler'].forEach(g => {
+    const rules = document.getElementById('rules-' + g);
+    const btn   = document.getElementById('gbtn-' + g);
+    if (rules) rules.style.display = g === id ? 'block' : 'none';
+    if (btn)   btn.classList.toggle('active', g === id);
   });
 }
 window.selectGame = selectGame;
