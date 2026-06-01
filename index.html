@@ -181,7 +181,9 @@
   .player-chip button:hover { color: var(--red); }
 
   /* MOBILE */
-  .rank-card { display: none; }
+  .nav-icon { font-size: 14px; line-height: 1; }
+  .nav-label { font-size: 13px; }
+  nav button { flex-direction: row; gap: 6px; }
 
   @media (max-width: 640px) {
     #app { padding: 0 12px 80px; }
@@ -369,7 +371,6 @@
           <option value="bahamas">✈️ Bahamas</option>
           <option value="avalon">🏰 Avalon</option>
           <option value="hitler">🎭 Secret Hitler</option>
-          <option value="codenames">🔴 Código Secreto</option>
         </select>
       </div>
       <div id="game-form-area"></div>
@@ -418,11 +419,6 @@
         <div class="game-btn-icon">🎭</div>
         <div class="game-btn-name">Secret Hitler</div>
         <div class="game-btn-sub">Liberales vs Fascistas</div>
-      </button>
-      <button class="game-btn" id="gbtn-codenames" onclick="selectGame('codenames')">
-        <div class="game-btn-icon">🔴</div>
-        <div class="game-btn-name">Código Secreto</div>
-        <div class="game-btn-sub">Equipos y pistas</div>
       </button>
     </div>
 
@@ -647,7 +643,7 @@
         <button class="accordion-btn open" onclick="toggleAccordion('av-obj')"><span>🎯 Objetivo y preparación</span><span class="accordion-arrow open" id="arrow-av-obj">▼</span></button>
         <div class="accordion-body" id="acc-av-obj">
           <div class="rules-section" style="margin-top:12px">
-            <p class="rules-text">El equipo del <strong>Bien</strong> intenta completar 3 de 5 misiones. El equipo del <strong>Mal</strong> intenta sabotear 3 de 5 misiones sin ser descubiertos. Al final, si el Mal pierde, puede ganar adivinando quién es <strong>Merlín</strong>.</p>
+            <p class="rules-text">El equipo del <strong>Bien</strong> intenta completar 3 misiones. El equipo del <strong>Mal</strong> intenta sabotear 3 misiones sin ser descubiertos. Al final, si el Mal pierde, puede ganar adivinando quién es <strong>Merlín</strong>.</p>
             <div class="rules-table" style="margin-top:10px">
               <div class="rules-table-row header"><span>Jugadores</span><span>Bien</span><span>Mal</span></div>
               <div class="rules-table-row"><span>5</span><span>3</span><span>2</span></div>
@@ -677,16 +673,16 @@
         <div class="accordion-body" id="acc-av-play" style="display:none">
           <p class="rules-text" style="margin-top:12px">El líder propone un equipo para la misión. <strong>Todos votan</strong> si aprueban o rechazan el equipo. Si se rechaza 5 veces seguidas, el Mal gana automáticamente.<br><br>
           Si se aprueba, los miembros del equipo votan en secreto <strong>Éxito</strong> o <strong>Sabotaje</strong>. El Bien solo puede votar Éxito. El Mal puede elegir.<br><br>
-          <strong>Misión exitosa:</strong> ningún voto de Sabotaje (en la misión 4 con 7+ jugadores se necesitan 2 sabotajes para fallar).<br><br>
-          <strong>Misión fallida:</strong> al menos 1 voto de Sabotaje. Se juegan <strong>5 misiones en total</strong>. Gana quien complete 3 de las 5 primero.</p>
+          <strong>Misión exitosa:</strong> ningún voto de Sabotaje (en misión 4 con 7+ jugadores se necesitan 2 sabotajes para fallar).<br><br>
+          <strong>Misión fallida:</strong> al menos 1 voto de Sabotaje. Se juegan 5 misiones. Gana quien complete 3 primero.</p>
         </div>
       </div>
       <div class="accordion-item">
         <button class="accordion-btn" onclick="toggleAccordion('av-pts')"><span>🏆 Puntos en la jornada</span><span class="accordion-arrow" id="arrow-av-pts">▼</span></button>
         <div class="accordion-body" id="acc-av-pts" style="display:none">
           <div style="margin-top:12px">
-            <div class="rule-row"><span>Equipo del Mal gana (3 de 5 misiones saboteadas, o Asesino adivina a Merlín)</span><span class="rule-pts">12 PTS</span></div>
-            <div class="rule-row"><span>Equipo del Bien gana (3 de 5 misiones exitosas)</span><span class="rule-pts">8 PTS</span></div>
+            <div class="rule-row"><span>Equipo del Mal gana (3 misiones saboteadas o Asesino adivina a Merlín)</span><span class="rule-pts">12 PTS</span></div>
+            <div class="rule-row"><span>Equipo del Bien gana (3 misiones exitosas)</span><span class="rule-pts">8 PTS</span></div>
             <div class="rule-row"><span>Equipo Perdedor</span><span class="rule-pts">2 PTS</span></div>
           </div>
         </div>
@@ -772,64 +768,6 @@
       <a href="https://www.secrethitler.com/assets/Secret_Hitler_Rules.pdf" target="_blank" class="rules-link-btn" style="margin-bottom:16px">📄 Ver reglas oficiales →</a>
     </div>
 
-    <!-- CÓDIGO SECRETO -->
-    <div id="rules-codenames" style="display:none">
-      <div class="accordion-item">
-        <button class="accordion-btn open" onclick="toggleAccordion('cn-obj')"><span>🎯 Objetivo y preparación</span><span class="accordion-arrow open" id="arrow-cn-obj">▼</span></button>
-        <div class="accordion-body" id="acc-cn-obj">
-          <div class="rules-section" style="margin-top:12px">
-            <p class="rules-text">Dos equipos — <strong style="color:#FF5E5E">Rojo</strong> y <strong style="color:#2E7FD9">Azul</strong> — compiten por descubrir todas sus palabras secretas en la grilla antes que el rival. Cada equipo tiene un <strong>Maestro Espía</strong> que conoce qué palabras pertenecen a su equipo y da pistas para guiar a sus compañeros.</p>
-            <p class="rules-text" style="margin-top:8px">Se arma una grilla de 25 palabras (5x5). El equipo que empieza tiene 9 palabras, el otro 8, hay 7 palabras neutras y <strong>1 Asesino</strong>. El equipo que empieza tiene desventaja numérica pero ventaja de turno.</p>
-          </div>
-        </div>
-      </div>
-      <div class="accordion-item">
-        <button class="accordion-btn" onclick="toggleAccordion('cn-play')"><span>🔄 Cómo se juega</span><span class="accordion-arrow" id="arrow-cn-play">▼</span></button>
-        <div class="accordion-body" id="acc-cn-play" style="display:none">
-          <p class="rules-text" style="margin-top:12px">El <strong>Maestro Espía</strong> da una pista compuesta de <strong>una sola palabra</strong> y un <strong>número</strong> (cantidad de palabras relacionadas). Por ejemplo: "animal, 3" significa que 3 palabras de la grilla se relacionan con animales.<br><br>
-          Los <strong>Operativos</strong> (resto del equipo) discuten y señalan palabras una por vez. Si aciertan, pueden seguir adivinando (hasta el número dicho + 1 extra). Si tocan una palabra neutra, el turno pasa al rival. Si tocan una palabra del rival, también pasa el turno y el rival suma un acierto.<br><br>
-          <strong>⚠️ El Asesino:</strong> si cualquier equipo toca la palabra del Asesino, pierde inmediatamente.</p>
-          <div class="card-list" style="margin-top:12px">
-            <div class="card-item"><span class="card-name">✅ Acierto propio</span><span class="card-desc">La palabra es de tu equipo. Podés seguir adivinando o pasar el turno voluntariamente.</span></div>
-            <div class="card-item"><span class="card-name">⬜ Palabra neutra</span><span class="card-desc">No pertenece a nadie. El turno pasa al equipo contrario.</span></div>
-            <div class="card-item"><span class="card-name">❌ Palabra del rival</span><span class="card-desc">Le sumás un acierto al contrario y perdés el turno.</span></div>
-            <div class="card-item"><span class="card-name">💀 El Asesino</span><span class="card-desc">Derrota instantánea. Game over para tu equipo.</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="accordion-item">
-        <button class="accordion-btn" onclick="toggleAccordion('cn-maestro')"><span>🕵️ Reglas del Maestro Espía</span><span class="accordion-arrow" id="arrow-cn-maestro">▼</span></button>
-        <div class="accordion-body" id="acc-cn-maestro" style="display:none">
-          <div class="card-list" style="margin-top:12px">
-            <div class="card-item"><span class="card-name">✅ Puede dar</span><span class="card-desc">Una sola palabra como pista + un número. La palabra puede ser en cualquier idioma.</span></div>
-            <div class="card-item"><span class="card-name">❌ No puede dar</span><span class="card-desc">Palabras que aparecen en la grilla (ni derivadas). Gestos, entonación, ni pistas adicionales mientras el equipo adivina.</span></div>
-            <div class="card-item"><span class="card-name">♾️ Número ilimitado</span><span class="card-desc">Puede decir "infinito" para dar una pista que aplica a todas las palabras restantes, pero el equipo solo puede adivinar hasta revelar 1 word por turno (con riesgo).</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="accordion-item">
-        <button class="accordion-btn" onclick="toggleAccordion('cn-pts')"><span>🏆 Puntos en la jornada</span><span class="accordion-arrow" id="arrow-cn-pts">▼</span></button>
-        <div class="accordion-body" id="acc-cn-pts" style="display:none">
-          <div style="margin-top:12px">
-            <div class="rule-row"><span>Equipo Ganador — todos los integrantes</span><span class="rule-pts">10 PTS</span></div>
-            <div class="rule-row"><span>Equipo Perdedor</span><span class="rule-pts">2 PTS</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="accordion-item">
-        <button class="accordion-btn" onclick="toggleAccordion('cn-faq')"><span>❓ FAQ</span><span class="accordion-arrow" id="arrow-cn-faq">▼</span></button>
-        <div class="accordion-body" id="acc-cn-faq" style="display:none">
-          <div class="faq-list" style="margin-top:12px">
-            <div class="faq-item"><div class="faq-q">¿El Maestro puede dar una pista de un solo número?</div><div class="faq-a">Sí. "animal, 1" significa que solo una palabra se relaciona. Si da "0" significa que ninguna se relaciona pero el equipo igual puede adivinar 1 (apostando a una palabra del rival o neutra).</div></div>
-            <div class="faq-item"><div class="faq-q">¿Qué pasa si el Maestro comete un error y sus operativos tocan el Asesino?</div><div class="faq-a">El equipo pierde igualmente. El Maestro no puede advertir ni corregirse — por eso las pistas deben ser claras.</div></div>
-            <div class="faq-item"><div class="faq-q">¿Se puede pasar el turno sin adivinar?</div><div class="faq-a">Sí, después de al menos 1 intento. El equipo puede decidir pasar voluntariamente si no está seguro.</div></div>
-            <div class="faq-item"><div class="faq-q">¿Los equipos tienen que estar balanceados?</div><div class="faq-a">No es obligatorio, pero se recomienda equipos parejos. Si hay diferencia, el equipo más grande puede tener ventaja.</div></div>
-          </div>
-        </div>
-      </div>
-      <a href="https://czechgames.com/files/rules/codenames-rules-en.pdf" target="_blank" class="rules-link-btn" style="margin-bottom:16px">📄 Ver reglas oficiales →</a>
-    </div>
-
     <!-- PREGUNTAS DE JUGADORES -->
     <div class="card" style="margin-top:8px">
       <div class="card-title"><span>💬</span> Preguntas de jugadores</div>
@@ -868,8 +806,6 @@
       <div id="sessions-list"><div style="color:var(--muted);font-size:13px">No hay sesiones creadas.</div></div>
       <div id="session-alert"></div>
     </div>
-    <div class="admin-section">
-      <div class="admin-section-title">👥 Jugadores registrados</div>
       <div id="admin-user-list"><div style="color:var(--muted);font-size:13px">Nadie se ha logueado todavía.</div></div>
     </div>
     <div class="admin-section">
@@ -1107,9 +1043,8 @@ function renderGameForm() {
   if (game === 'kittens')       renderKittensForm(area);
   else if (game === 'saboteur') renderSaboteurForm(area);
   else if (game === 'bahamas')  renderBahamasForm(area);
-  else if (game === 'avalon')     renderAvalonForm(area);
-  else if (game === 'hitler')     renderHitlerForm(area);
-  else if (game === 'codenames')  renderCodenamesForm(area);
+  else if (game === 'avalon')   renderAvalonForm(area);
+  else if (game === 'hitler')   renderHitlerForm(area);
 }
 window.renderGameForm = renderGameForm;
 
@@ -1270,17 +1205,8 @@ async function saveGame() {
     });
   }
 
-  } else if (game === 'codenames') {
-    const winner = document.getElementById('cn-winner').value;
-    results = players.map((p,i) => {
-      const team = document.getElementById('cn-team-'+i).value;
-      if (team === 'no') return { player: p.name, pts: 0, label: '— No participó', bonus: '' };
-      const won = team === winner;
-      const teamLabel = team === 'rojo' ? '🔴 Rojo' : '🔵 Azul';
-      return { player: p.name, pts: won ? 10 : 2, label: won ? `✅ Ganador (${teamLabel})` : `❌ Perdedor (${teamLabel})`, bonus: '' };
-    });
-  }
-  const gameNames = {kittens:'🐱 Exploding Kittens', saboteur:'⛏️ Saboteur', bahamas:'✈️ Bahamas', avalon:'🏰 Avalon', hitler:'🎭 Secret Hitler', codenames:'🔴 Código Secreto'};
+  if (!confirm('¿Confirmar el registro de esta partida?')) return;
+  const gameNames = {kittens:'🐱 Exploding Kittens', saboteur:'⛏️ Saboteur', bahamas:'✈️ Bahamas', avalon:'🏰 Avalon', hitler:'🎭 Secret Hitler'};
   try {
     const data = {
       game: gameNames[game], results,
@@ -1324,11 +1250,7 @@ function getResultEmoji(gameName, label) {
     if (label.includes('Ganador') && label.includes('Liberal')) return '🔵';
     return '❌';
   }
-  if (gameName.includes('Código Secreto')) {
-    if (label.includes('Ganador') && label.includes('Rojo')) return '🔴';
-    if (label.includes('Ganador') && label.includes('Azul')) return '🔵';
-    return '❌';
-  }
+  if (gameName.includes('Bahamas')) {
     if (label.includes('FBI')) return '🕵️';
     if (label.includes('Ganador')) return '🏆';
     if (label.includes('Sobreviviente')) return '🪂';
@@ -1709,27 +1631,7 @@ function updateSessionBadge() {
 }
 
 // ── AVALON & SECRET HITLER FORMS ───────────────────────────────────────
-function renderCodenamesForm(area) {
-  area.innerHTML = `
-    <div class="section-label" style="margin-top:0">Resultado</div>
-    <div style="margin-bottom:14px">
-      <div class="form-label">¿Quién ganó?</div>
-      <select id="cn-winner">
-        <option value="rojo">🔴 Equipo Rojo ganó</option>
-        <option value="azul">🔵 Equipo Azul ganó</option>
-      </select>
-    </div>
-    <div class="section-label">Equipo de cada jugador</div>
-    ${players.map((p,i) => `
-      <div class="player-position-row">
-        <div class="player-pos-name">${p.name}</div>
-        <select class="pos-select" id="cn-team-${i}">
-          <option value="no" selected>❌ No participa</option>
-          <option value="rojo">🔴 Equipo Rojo</option>
-          <option value="azul">🔵 Equipo Azul</option>
-        </select>
-      </div>`).join('')}`;
-}
+function renderAvalonForm(area) {
   area.innerHTML = `
     <div class="section-label" style="margin-top:0">Resultado</div>
     <div style="margin-bottom:14px">
@@ -1791,7 +1693,7 @@ window.toggleAccordion = toggleAccordion;
 
 // ── GAME SELECTOR ──────────────────────────────────────────────────────
 function selectGame(id) {
-  ['ek','sab','bah','avalon','hitler','codenames'].forEach(g => {
+  ['ek','sab','bah','avalon','hitler'].forEach(g => {
     const rules = document.getElementById('rules-' + g);
     const btn   = document.getElementById('gbtn-' + g);
     if (rules) rules.style.display = g === id ? 'block' : 'none';
