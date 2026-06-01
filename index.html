@@ -1250,6 +1250,7 @@ function getResultEmoji(gameName, label) {
     if (label.includes('Ganador') && label.includes('Liberal')) return '🔵';
     return '❌';
   }
+  if (gameName.includes('Bahamas')) {
     if (label.includes('FBI')) return '🕵️';
     if (label.includes('Ganador')) return '🏆';
     if (label.includes('Sobreviviente')) return '🪂';
