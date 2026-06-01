@@ -181,9 +181,7 @@
   .player-chip button:hover { color: var(--red); }
 
   /* MOBILE */
-  .nav-icon { font-size: 14px; line-height: 1; }
-  .nav-label { font-size: 13px; }
-  nav button { flex-direction: row; gap: 6px; }
+  .rank-card { display: none; }
 
   @media (max-width: 640px) {
     #app { padding: 0 12px 80px; }
@@ -806,6 +804,8 @@
       <div id="sessions-list"><div style="color:var(--muted);font-size:13px">No hay sesiones creadas.</div></div>
       <div id="session-alert"></div>
     </div>
+    <div class="admin-section">
+      <div class="admin-section-title">👥 Jugadores registrados</div>
       <div id="admin-user-list"><div style="color:var(--muted);font-size:13px">Nadie se ha logueado todavía.</div></div>
     </div>
     <div class="admin-section">
