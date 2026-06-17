@@ -1503,7 +1503,6 @@ async function saveGame() {
       const teamLabel = team === 'rojo' ? '🔴 Rojo' : '🔵 Azul';
       return { player: p.name, pts: won ? 10 : 2, label: won ? `✅ Ganador (${teamLabel})` : `❌ Perdedor (${teamLabel})`, bonus: '' };
     });
-  }
   } else if (game === 'contrarreloj') {
     if (!crTeams) { showAlert(alertEl, 'Generá los equipos primero.', 'error'); return; }
     const scoreA = parseInt(document.getElementById('cr-score-a').value) || 0;
