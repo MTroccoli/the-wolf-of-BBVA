@@ -1211,13 +1211,13 @@ function refreshUI() {
 }
 
 function applyGameVisibility() {
-  // Dropdown de registro de partidas
+  // Dropdown de registro de partidas (hidden + disabled porque display:none no funciona en Chrome)
   const sel = document.getElementById('game-select');
   if (sel) {
     Array.from(sel.options).forEach(opt => {
       const enabled = gameConfig[opt.value] !== false;
       opt.disabled = !enabled;
-      opt.style.display = enabled ? '' : 'none';
+      opt.hidden   = !enabled;
     });
     if (gameConfig[sel.value] === false) {
       const firstEnabled = Array.from(sel.options).find(o => gameConfig[o.value] !== false);
@@ -1249,7 +1249,7 @@ function applyGameVisibility() {
       if (game) {
         const enabled = gameConfig[game.key] !== false;
         opt.disabled = !enabled;
-        opt.style.display = enabled ? '' : 'none';
+        opt.hidden   = !enabled;
       }
     });
   }
@@ -2071,7 +2071,7 @@ window.toggleAccordion = toggleAccordion;
 
 // ── GAME SELECTOR ──────────────────────────────────────────────────────
 function selectGame(id) {
-  ['ek','sab','bah','avalon','hitler','codenames'].forEach(g => {
+  ['ek','sab','bah','avalon','hitler','codenames','cr'].forEach(g => {
     const rules = document.getElementById('rules-' + g);
     const btn   = document.getElementById('gbtn-' + g);
     if (rules) rules.style.display = g === id ? 'block' : 'none';
