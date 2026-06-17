@@ -282,28 +282,41 @@
     <div class="login-logo">BBVA · Jornada Lúdica 2026</div>
     <div class="login-title">THE WOLF<br>OF <span>BBVA</span></div>
     <div class="login-sub">Dados, Oro y Picardía<br>Departamento de Finanzas</div>
-    <div class="login-field">
-      <label>Tu nombre</label>
-      <input type="text" id="login-name" placeholder="Ej: Juan García" autocomplete="off"
-             onkeydown="if(event.key==='Enter')document.getElementById('login-pass').focus()" />
+
+    <!-- PASO 1: elegir cómo entrar -->
+    <div id="login-step-choose">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:20px">¿Cómo querés entrar?</p>
+      <button class="login-btn" onclick="showLoginForm()" style="margin-bottom:10px">
+        🎮 JUGADOR / ADMIN
+      </button>
+      <button class="login-btn" onclick="enterAsVisitor()" style="background:transparent;border:1px solid rgba(46,127,217,0.35);color:var(--muted)">
+        👀 ENTRAR COMO VISITANTE
+      </button>
     </div>
-    <div class="login-field">
-      <label>Contraseña</label>
-      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="off"
-             onkeydown="if(event.key==='Enter')doLogin()" />
+
+    <!-- PASO 2: formulario jugador/admin -->
+    <div id="login-step-form" style="display:none">
+      <div class="login-field">
+        <label>Tu nombre</label>
+        <input type="text" id="login-name" placeholder="Ej: Juan García" autocomplete="off"
+               onkeydown="if(event.key==='Enter')document.getElementById('login-pass').focus()" />
+      </div>
+      <div class="login-field">
+        <label>Contraseña</label>
+        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="off"
+               onkeydown="if(event.key==='Enter')doLogin()" />
+      </div>
+      <div class="login-field" id="session-field" style="display:none">
+        <label>Sesión</label>
+        <select id="login-session">
+          <option value="">Cargando sesiones...</option>
+        </select>
+      </div>
+      <button class="login-btn" onclick="doLogin()">ENTRAR A LA JORNADA</button>
+      <button onclick="showChooseStep()" style="background:transparent;border:none;color:var(--muted);font-size:13px;cursor:pointer;margin-top:12px;width:100%;padding:6px">← Volver</button>
     </div>
-    <div class="login-field" id="session-field" style="display:none">
-      <label>Sesión</label>
-      <select id="login-session">
-        <option value="">Cargando sesiones...</option>
-      </select>
-    </div>
-    <button class="login-btn" onclick="doLogin()">ENTRAR A LA JORNADA</button>
+
     <div id="login-error"></div>
-    <div class="login-hint">
-      Jugadores: contraseña <strong style="color:var(--accent)">fin2026</strong><br>
-      Visitantes: contraseña <strong style="color:var(--accent)">visitante</strong>
-    </div>
   </div>
 </div>
 
@@ -1086,6 +1099,27 @@ function bootApp() {
   showPanel('ranking', document.querySelector('nav button.active') || document.querySelectorAll('nav button')[1]);
 }
 
+function showLoginForm() {
+  document.getElementById('login-step-choose').style.display = 'none';
+  document.getElementById('login-step-form').style.display = 'block';
+}
+window.showLoginForm = showLoginForm;
+
+function showChooseStep() {
+  document.getElementById('login-step-form').style.display = 'none';
+  document.getElementById('login-step-choose').style.display = 'block';
+  document.getElementById('login-error').innerHTML = '';
+}
+window.showChooseStep = showChooseStep;
+
+async function enterAsVisitor() {
+  currentUser = { name: 'Visitante', isAdmin: false, isVisitor: true };
+  currentSession = null;
+  await fetchAll();
+  bootApp();
+}
+window.enterAsVisitor = enterAsVisitor;
+
 function doLogout() {
   currentUser = null;
   document.getElementById('login-screen').style.display = 'flex';
@@ -1099,6 +1133,7 @@ function doLogout() {
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   document.getElementById('panel-partida').classList.add('active');
   document.querySelector('nav button').classList.add('active');
+  showChooseStep();
 }
 window.doLogout = doLogout;
 
