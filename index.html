@@ -881,6 +881,12 @@
       <div class="admin-section-title">🗑️ Gestión de partidas</div>
       <div id="admin-history-list"><div style="color:var(--muted);font-size:13px">No hay partidas registradas.</div></div>
     </div>
+    <div class="admin-section" style="border-color:rgba(0,196,204,0.3)">
+      <div class="admin-section-title" style="color:var(--bbva-aqua)">🎮 Visibilidad de Juegos</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Activá o desactivá juegos. Los desactivados no aparecen en Reglas ni al registrar partidas.</p>
+      <div id="admin-games-list"></div>
+      <div id="admin-games-alert"></div>
+    </div>
     <div class="admin-section" style="border-color:rgba(255,94,94,0.3)">
       <div class="admin-section-title" style="color:var(--red)">⚠️ Zona peligrosa</div>
       <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Borra TODOS los datos. Irreversible.</p>
@@ -900,12 +906,22 @@ const ADMIN_USER  = 'admin';
 const ADMIN_PASS  = 'admin777';
 const PLAYER_PASS = 'fin2026';
 
+const GAMES = [
+  { key: 'kittens',   label: '🐱 Exploding Kittens', rulesBtnId: 'gbtn-ek',        faqName: 'Exploding Kittens' },
+  { key: 'saboteur',  label: '⛏️ Saboteur',          rulesBtnId: 'gbtn-sab',       faqName: 'Saboteur' },
+  { key: 'bahamas',   label: '✈️ Bahamas',            rulesBtnId: 'gbtn-bah',       faqName: 'Bahamas' },
+  { key: 'avalon',    label: '🏰 Avalon',             rulesBtnId: 'gbtn-avalon',    faqName: null },
+  { key: 'hitler',    label: '🎭 Secret Hitler',      rulesBtnId: 'gbtn-hitler',    faqName: null },
+  { key: 'codenames', label: '🔴 Código Secreto',     rulesBtnId: 'gbtn-codenames', faqName: null },
+];
+
 let currentUser = null;
 let players     = [];
 let sessions       = [];
 let currentSession = null;
 let history     = [];
 let bonusPoints = [];
+let gameConfig  = {}; // key -> boolean (undefined = enabled by default)
 let pollInterval = null;
 
 // ── API HELPERS ────────────────────────────────────────────────────────
@@ -947,6 +963,15 @@ async function sbDeleteAll(table) {
   if (!r.ok) throw new Error(await r.text());
 }
 
+async function sbUpsertGameConfig(data) {
+  const r = await fetch(`${SUPA_URL}/rest/v1/game_config?on_conflict=key`, {
+    method: 'POST', headers: { ...HEADERS, 'Prefer': 'resolution=merge-duplicates,return=representation' },
+    body: JSON.stringify(data)
+  });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
 // ── POLLING (reemplaza tiempo real, funciona en todos los navegadores) ──
 async function fetchAll() {
   try {
@@ -958,14 +983,19 @@ async function fetchAll() {
       hUrl += `&session_id=eq.${currentSession.id}`;
       bUrl += `&session_id=eq.${currentSession.id}`;
     }
-    const [p, h, b] = await Promise.all([
+    const [p, h, b, gc] = await Promise.all([
       fetch(pUrl, { headers: HEADERS }).then(r => r.json()),
       fetch(hUrl, { headers: HEADERS }).then(r => r.json()),
       fetch(bUrl, { headers: HEADERS }).then(r => r.json()),
+      fetch(`${SUPA_URL}/rest/v1/game_config?select=*`, { headers: HEADERS }).then(r => r.ok ? r.json() : []).catch(() => []),
     ]);
     players     = Array.isArray(p) ? p : [];
     history     = Array.isArray(h) ? h : [];
     bonusPoints = Array.isArray(b) ? b : [];
+    if (Array.isArray(gc) && gc.length > 0) {
+      gameConfig = {};
+      gc.forEach(g => { gameConfig[g.key] = g.enabled; });
+    }
     setSyncStatus(true);
     refreshUI();
   } catch(e) {
@@ -1093,7 +1123,54 @@ function refreshUI() {
   if (id === 'historial') renderHistory();
   if (id === 'admin')     renderAdmin();
   // NO refrescar el formulario de partida automáticamente — el usuario puede estar cargando datos
+  applyGameVisibility();
 }
+
+function applyGameVisibility() {
+  // Dropdown de registro de partidas
+  const sel = document.getElementById('game-select');
+  if (sel) {
+    Array.from(sel.options).forEach(opt => {
+      const enabled = gameConfig[opt.value] !== false;
+      opt.disabled = !enabled;
+      opt.style.display = enabled ? '' : 'none';
+    });
+    if (gameConfig[sel.value] === false) {
+      const firstEnabled = Array.from(sel.options).find(o => gameConfig[o.value] !== false);
+      if (firstEnabled) { sel.value = firstEnabled.value; renderGameForm(); }
+    }
+  }
+
+  // Botones de juegos en Reglas
+  GAMES.forEach(g => {
+    const btn = document.getElementById(g.rulesBtnId);
+    if (btn) btn.style.display = gameConfig[g.key] === false ? 'none' : '';
+  });
+
+  // Si el botón de reglas activo quedó oculto, activar el primero visible
+  const activeBtn = document.querySelector('#panel-reglas .game-btn.active');
+  if (activeBtn) {
+    const activeKey = GAMES.find(g => g.rulesBtnId === activeBtn.id)?.key;
+    if (activeKey && gameConfig[activeKey] === false) {
+      const firstEnabled = GAMES.find(g => gameConfig[g.key] !== false);
+      if (firstEnabled) document.getElementById(firstEnabled.rulesBtnId)?.click();
+    }
+  }
+
+  // Selector de juego en preguntas FAQ
+  const faqSel = document.getElementById('faq-game');
+  if (faqSel) {
+    Array.from(faqSel.options).forEach(opt => {
+      const game = GAMES.find(g => g.faqName === opt.value);
+      if (game) {
+        const enabled = gameConfig[game.key] !== false;
+        opt.disabled = !enabled;
+        opt.style.display = enabled ? '' : 'none';
+      }
+    });
+  }
+}
+window.applyGameVisibility = applyGameVisibility;
 
 // ── GAME FORM ──────────────────────────────────────────────────────────
 function renderGameForm() {
@@ -1444,9 +1521,44 @@ function renderRanking() {
 }
 
 // ── ADMIN ──────────────────────────────────────────────────────────────
+function renderAdminGames() {
+  const el = document.getElementById('admin-games-list');
+  if (!el) return;
+  el.innerHTML = GAMES.map(g => {
+    const enabled = gameConfig[g.key] !== false;
+    return `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(255,255,255,0.04);border-radius:8px;margin-bottom:8px;border:1px solid var(--border)">
+        <span style="font-size:14px;font-weight:500">${g.label}</span>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <span style="font-size:12px;font-family:'DM Mono',monospace;color:${enabled ? 'var(--green)' : 'var(--red)'}">${enabled ? 'ACTIVO' : 'INACTIVO'}</span>
+          <input type="checkbox" ${enabled ? 'checked' : ''} onchange="toggleGame('${g.key}', this.checked)" style="width:18px;height:18px;accent-color:var(--green);cursor:pointer">
+        </label>
+      </div>`;
+  }).join('');
+}
+
+async function toggleGame(key, enabled) {
+  const alertEl = document.getElementById('admin-games-alert');
+  try {
+    await sbUpsertGameConfig({ key, enabled });
+    gameConfig[key] = enabled;
+    applyGameVisibility();
+    renderAdminGames();
+    if (alertEl) {
+      const g = GAMES.find(g => g.key === key);
+      alertEl.innerHTML = `<div class="alert alert-ok" style="margin-top:8px">✔ ${g?.label || key} ${enabled ? 'activado' : 'desactivado'}.</div>`;
+      setTimeout(() => { if (alertEl) alertEl.innerHTML = ''; }, 2500);
+    }
+  } catch(e) {
+    if (alertEl) alertEl.innerHTML = `<div class="alert alert-error" style="margin-top:8px">Error al guardar. Asegurate de crear la tabla <code>game_config</code> en Supabase.</div>`;
+  }
+}
+window.toggleGame = toggleGame;
+
 function renderAdmin() {
   if (!currentUser?.isAdmin) return;
   renderSessionsList();
+  renderAdminGames();
 
   const uEl = document.getElementById('admin-user-list');
   uEl.innerHTML = players.length === 0
