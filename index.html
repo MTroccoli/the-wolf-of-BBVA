@@ -1339,8 +1339,17 @@ function renderBahamasForm(area) {
 function renderContrarrelojForm(area) {
   crTeams = null;
   area.innerHTML = `
-    <div class="section-label" style="margin-top:0">Sorteo de equipos</div>
-    <button class="btn btn-primary" onclick="crGenerateTeams()" style="margin-bottom:14px;width:100%">🎲 GENERAR EQUIPOS AL AZAR</button>
+    <div class="section-label" style="margin-top:0">¿Quiénes participan?</div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:8px">
+      <button class="btn btn-sm" onclick="crToggleAll(true)"  style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--muted)">Todos</button>
+      <button class="btn btn-sm" onclick="crToggleAll(false)" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--muted)">Ninguno</button>
+    </div>
+    ${players.map((p,i) => `
+      <label style="display:flex;align-items:center;gap:10px;padding:9px 14px;background:rgba(255,255,255,0.04);border-radius:8px;margin-bottom:6px;cursor:pointer;border:1px solid var(--border)">
+        <input type="checkbox" id="cr-pick-${i}" checked style="accent-color:var(--accent);width:16px;height:16px;cursor:pointer">
+        <span style="font-size:14px;font-weight:500">${p.name}</span>
+      </label>`).join('')}
+    <button class="btn btn-primary" onclick="crGenerateTeams()" style="margin-top:10px;margin-bottom:14px;width:100%">🎲 GENERAR EQUIPOS</button>
     <div id="cr-teams-display"></div>
     <div id="cr-result-form" style="display:none">
       <div class="section-label">Palabras adivinadas</div>
@@ -1374,8 +1383,22 @@ function renderContrarrelojForm(area) {
     </div>`;
 }
 
+function crToggleAll(checked) {
+  players.forEach((_,i) => {
+    const cb = document.getElementById('cr-pick-' + i);
+    if (cb) cb.checked = checked;
+  });
+}
+window.crToggleAll = crToggleAll;
+
 function crGenerateTeams() {
-  const shuffled = [...players].sort(() => Math.random() - 0.5);
+  const selected = players.filter((_,i) => document.getElementById('cr-pick-' + i)?.checked);
+  if (selected.length < 2) {
+    document.getElementById('cr-teams-display').innerHTML =
+      '<div class="alert alert-error" style="margin-bottom:12px">Seleccioná al menos 2 jugadores.</div>';
+    return;
+  }
+  const shuffled = [...selected].sort(() => Math.random() - 0.5);
   const mid = Math.ceil(shuffled.length / 2);
   crTeams = { a: shuffled.slice(0, mid), b: shuffled.slice(mid) };
 
@@ -1398,7 +1421,6 @@ function crGenerateTeams() {
   if (mvpB) mvpB.innerHTML = '<option value="">— Nadie destacado —</option>' + crTeams.b.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
   document.getElementById('cr-result-form').style.display = 'block';
 }
-window.crGenerateTeams = crGenerateTeams;
 
 // ── SAVE GAME ──────────────────────────────────────────────────────────
 async function saveGame() {
