@@ -59,7 +59,7 @@
   .logout-btn:hover { border-color: rgba(255,94,94,0.4); color: var(--red); }
 
   nav { display: flex; gap: 4px; margin-bottom: 24px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 4px; flex-wrap: wrap; }
-  nav button { flex: 1; min-width: 70px; padding: 10px 8px; background: transparent; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--muted); border-radius: 7px; transition: all 0.2s; }
+  nav button { flex: 1; min-width: 70px; padding: 10px 8px; background: transparent; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--muted); border-radius: 7px; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 3px; }
   nav button.active { background: var(--bbva-blue); color: #fff; font-weight: 600; }
   nav button:hover:not(.active) { color: var(--text); background: rgba(46,127,217,0.1); }
 
@@ -882,7 +882,7 @@
         <div class="accordion-body" id="acc-cr-pts" style="display:none">
           <div style="margin-top:12px">
             <div class="rule-row"><span>Equipo ganador — por jugador</span><span class="rule-pts">8 PTS</span></div>
-            <div class="rule-row"><span>Equipo perdedor — por jugador</span><span class="rule-pts">3 PTS</span></div>
+            <div class="rule-row"><span>Equipo perdedor — por jugador</span><span class="rule-pts">2 PTS</span></div>
             <div class="rule-row"><span>Empate — por jugador</span><span class="rule-pts">5 PTS</span></div>
             <div class="rule-row"><span>⚡ Bonus: quien más adivinó (por equipo)</span><span class="rule-pts">+2 PTS</span></div>
           </div>
@@ -1025,10 +1025,10 @@ async function sbDeleteAll(table) {
   if (!r.ok) throw new Error(await r.text());
 }
 
-async function sbUpsertGameConfig(data) {
-  const r = await fetch(`${SUPA_URL}/rest/v1/game_config?on_conflict=key`, {
-    method: 'POST', headers: { ...HEADERS, 'Prefer': 'resolution=merge-duplicates,return=representation' },
-    body: JSON.stringify(data)
+async function sbPatchGameConfig(key, enabled) {
+  const r = await fetch(`${SUPA_URL}/rest/v1/game_config?key=eq.${key}`, {
+    method: 'PATCH', headers: { ...HEADERS, 'Prefer': 'return=representation' },
+    body: JSON.stringify({ enabled })
   });
   if (!r.ok) throw new Error(await r.text());
   return r.json();
@@ -1196,6 +1196,7 @@ function showPanel(id, btn) {
   if (id === 'historial') renderHistory();
   if (id === 'admin')     renderAdmin();
   if (id === 'partida')   renderGameForm();
+  applyGameVisibility();
 }
 window.showPanel = showPanel;
 
@@ -1514,7 +1515,7 @@ async function saveGame() {
     [...crTeams.a, ...crTeams.b].forEach(p => {
       const inA    = crTeams.a.some(x => x.name === p.name);
       const won    = tie ? null : (inA ? aWon : !aWon);
-      const base   = tie ? 5 : (won ? 8 : 3);
+      const base   = tie ? 5 : (won ? 8 : 2);
       const isMvp  = p.name === mvpA || p.name === mvpB;
       const pts    = base + (isMvp ? 2 : 0);
       const team   = inA ? '⚡ Equipo A' : '🌊 Equipo B';
@@ -1707,7 +1708,7 @@ function renderAdminGames() {
 async function toggleGame(key, enabled) {
   const alertEl = document.getElementById('admin-games-alert');
   try {
-    await sbUpsertGameConfig({ key, enabled });
+    await sbPatchGameConfig(key, enabled);
     gameConfig[key] = enabled;
     applyGameVisibility();
     renderAdminGames();
