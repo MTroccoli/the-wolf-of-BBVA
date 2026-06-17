@@ -383,6 +383,7 @@
           <option value="avalon">🏰 Avalon</option>
           <option value="hitler">🎭 Secret Hitler</option>
           <option value="codenames">🔴 Código Secreto</option>
+          <option value="contrarreloj">⏱️ Contrarreloj</option>
         </select>
       </div>
       <div id="game-form-area"></div>
@@ -436,6 +437,11 @@
         <div class="game-btn-icon">🔴</div>
         <div class="game-btn-name">Código Secreto</div>
         <div class="game-btn-sub">Equipos y pistas</div>
+      </button>
+      <button class="game-btn" id="gbtn-cr" onclick="selectGame('cr')">
+        <div class="game-btn-icon">⏱️</div>
+        <div class="game-btn-name">Contrarreloj</div>
+        <div class="game-btn-sub">30 seg · Equipos</div>
       </button>
     </div>
 
@@ -843,6 +849,47 @@
       <a href="https://czechgames.com/files/rules/codenames-rules-en.pdf" target="_blank" class="rules-link-btn" style="margin-bottom:16px">📄 Ver reglas oficiales →</a>
     </div>
 
+    <!-- CONTRARRELOJ -->
+    <div id="rules-cr" style="display:none">
+      <div class="accordion-item">
+        <button class="accordion-btn open" onclick="toggleAccordion('cr-obj')"><span>🎯 Objetivo y preparación</span><span class="accordion-arrow open" id="arrow-cr-obj">▼</span></button>
+        <div class="accordion-body" id="acc-cr-obj">
+          <div class="rules-section" style="margin-top:12px">
+            <p class="rules-text">Describí la mayor cantidad de palabras a tu equipo antes de que se acabe el tiempo. Sin decir la palabra, sin deletrear, sin gestos.</p>
+            <div class="rules-table" style="margin-top:10px">
+              <div class="rules-table-row header"><span>Componentes</span><span>Detalle</span></div>
+              <div class="rules-table-row"><span>Cartas</span><span>240 cartas · 2400 palabras</span></div>
+              <div class="rules-table-row"><span>Tiempo</span><span>30 segundos por turno</span></div>
+              <div class="rules-table-row"><span>Jugadores</span><span>3 o más (en equipos)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-btn" onclick="toggleAccordion('cr-play')"><span>🔄 Cómo se juega</span><span class="accordion-arrow" id="arrow-cr-play">▼</span></button>
+        <div class="accordion-body" id="acc-cr-play" style="display:none">
+          <div class="rules-section" style="margin-top:12px">
+            <p class="rules-text">1. Se forman dos equipos (el panel de la app los sortea automáticamente).</p>
+            <p class="rules-text" style="margin-top:8px">2. Los equipos se alternan. En cada turno, un jugador del equipo activo agarra una carta.</p>
+            <p class="rules-text" style="margin-top:8px">3. Tiene <strong>30 segundos</strong> para que su equipo adivine la mayor cantidad de palabras de la carta.</p>
+            <p class="rules-text" style="margin-top:8px">4. <strong>Prohibido:</strong> decir la palabra, derivados, deletrear o hacer gestos.</p>
+            <p class="rules-text" style="margin-top:8px">5. Gana el equipo con más palabras adivinadas al terminar las rondas acordadas.</p>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-btn" onclick="toggleAccordion('cr-pts')"><span>🏆 Puntos en la jornada</span><span class="accordion-arrow" id="arrow-cr-pts">▼</span></button>
+        <div class="accordion-body" id="acc-cr-pts" style="display:none">
+          <div style="margin-top:12px">
+            <div class="rule-row"><span>Equipo ganador — por jugador</span><span class="rule-pts">8 PTS</span></div>
+            <div class="rule-row"><span>Equipo perdedor — por jugador</span><span class="rule-pts">3 PTS</span></div>
+            <div class="rule-row"><span>Empate — por jugador</span><span class="rule-pts">5 PTS</span></div>
+            <div class="rule-row"><span>⚡ Bonus: quien más adivinó (por equipo)</span><span class="rule-pts">+2 PTS</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- PREGUNTAS DE JUGADORES -->
     <div class="card" style="margin-top:8px">
       <div class="card-title"><span>💬</span> Preguntas de jugadores</div>
@@ -925,7 +972,8 @@ const GAMES = [
   { key: 'bahamas',   label: '✈️ Bahamas',            rulesBtnId: 'gbtn-bah',       faqName: 'Bahamas' },
   { key: 'avalon',    label: '🏰 Avalon',             rulesBtnId: 'gbtn-avalon',    faqName: null },
   { key: 'hitler',    label: '🎭 Secret Hitler',      rulesBtnId: 'gbtn-hitler',    faqName: null },
-  { key: 'codenames', label: '🔴 Código Secreto',     rulesBtnId: 'gbtn-codenames', faqName: null },
+  { key: 'codenames',    label: '🔴 Código Secreto',  rulesBtnId: 'gbtn-codenames', faqName: null },
+  { key: 'contrarreloj', label: '⏱️ Contrarreloj',   rulesBtnId: 'gbtn-cr',        faqName: null },
 ];
 
 let currentUser = null;
@@ -935,6 +983,7 @@ let currentSession = null;
 let history     = [];
 let bonusPoints = [];
 let gameConfig  = {}; // key -> boolean (undefined = enabled by default)
+let crTeams     = null; // { a: [players], b: [players] }
 let pollInterval = null;
 
 // ── API HELPERS ────────────────────────────────────────────────────────
@@ -1216,12 +1265,13 @@ function renderGameForm() {
     area.innerHTML = '<div class="alert alert-error" style="margin-top:0;margin-bottom:12px">Necesitás al menos 2 jugadores logueados.</div>';
     return;
   }
-  if (game === 'kittens')       renderKittensForm(area);
-  else if (game === 'saboteur') renderSaboteurForm(area);
-  else if (game === 'bahamas')  renderBahamasForm(area);
-  else if (game === 'avalon')     renderAvalonForm(area);
-  else if (game === 'hitler')     renderHitlerForm(area);
-  else if (game === 'codenames')  renderCodenamesForm(area);
+  if (game === 'kittens')            renderKittensForm(area);
+  else if (game === 'saboteur')      renderSaboteurForm(area);
+  else if (game === 'bahamas')       renderBahamasForm(area);
+  else if (game === 'avalon')        renderAvalonForm(area);
+  else if (game === 'hitler')        renderHitlerForm(area);
+  else if (game === 'codenames')     renderCodenamesForm(area);
+  else if (game === 'contrarreloj')  renderContrarrelojForm(area);
 }
 window.renderGameForm = renderGameForm;
 
@@ -1284,6 +1334,70 @@ function renderBahamasForm(area) {
         </select>
       </div>`).join('')}`;
 }
+
+function renderContrarrelojForm(area) {
+  crTeams = null;
+  area.innerHTML = `
+    <div class="section-label" style="margin-top:0">Sorteo de equipos</div>
+    <button class="btn btn-primary" onclick="crGenerateTeams()" style="margin-bottom:14px;width:100%">🎲 GENERAR EQUIPOS AL AZAR</button>
+    <div id="cr-teams-display"></div>
+    <div id="cr-result-form" style="display:none">
+      <div class="section-label">Palabras adivinadas</div>
+      <div style="display:grid;gap:8px;margin-bottom:16px">
+        <div class="player-position-row">
+          <div class="player-pos-name" id="cr-label-a">⚡ Equipo A</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:12px;color:var(--muted);white-space:nowrap">palabras:</span>
+            <input type="number" id="cr-score-a" min="0" max="300" value="0" style="width:70px" />
+          </div>
+        </div>
+        <div class="player-position-row">
+          <div class="player-pos-name" id="cr-label-b">🌊 Equipo B</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:12px;color:var(--muted);white-space:nowrap">palabras:</span>
+            <input type="number" id="cr-score-b" min="0" max="300" value="0" style="width:70px" />
+          </div>
+        </div>
+      </div>
+      <div class="section-label">⚡ Bonus +2 — ¿Quién adivinó más en cada equipo?</div>
+      <div style="display:grid;gap:10px">
+        <div>
+          <div class="form-label">Mejor del Equipo A</div>
+          <select id="cr-mvp-a"><option value="">— Nadie destacado —</option></select>
+        </div>
+        <div>
+          <div class="form-label">Mejor del Equipo B</div>
+          <select id="cr-mvp-b"><option value="">— Nadie destacado —</option></select>
+        </div>
+      </div>
+    </div>`;
+}
+
+function crGenerateTeams() {
+  const shuffled = [...players].sort(() => Math.random() - 0.5);
+  const mid = Math.ceil(shuffled.length / 2);
+  crTeams = { a: shuffled.slice(0, mid), b: shuffled.slice(mid) };
+
+  document.getElementById('cr-teams-display').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+      <div style="background:rgba(46,127,217,0.1);border:1px solid rgba(46,127,217,0.3);border-radius:10px;padding:12px">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:8px">⚡ Equipo A</div>
+        ${crTeams.a.map(p => `<div style="font-size:14px;font-weight:500;padding:3px 0">${p.name}</div>`).join('')}
+      </div>
+      <div style="background:rgba(0,196,204,0.08);border:1px solid rgba(0,196,204,0.3);border-radius:10px;padding:12px">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--bbva-aqua);margin-bottom:8px">🌊 Equipo B</div>
+        ${crTeams.b.map(p => `<div style="font-size:14px;font-weight:500;padding:3px 0">${p.name}</div>`).join('')}
+      </div>
+    </div>
+    <button class="btn" onclick="crGenerateTeams()" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--muted);margin-bottom:16px;width:100%">🔄 Revolver equipos</button>`;
+
+  const mvpA = document.getElementById('cr-mvp-a');
+  const mvpB = document.getElementById('cr-mvp-b');
+  if (mvpA) mvpA.innerHTML = '<option value="">— Nadie destacado —</option>' + crTeams.a.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+  if (mvpB) mvpB.innerHTML = '<option value="">— Nadie destacado —</option>' + crTeams.b.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+  document.getElementById('cr-result-form').style.display = 'block';
+}
+window.crGenerateTeams = crGenerateTeams;
 
 // ── SAVE GAME ──────────────────────────────────────────────────────────
 async function saveGame() {
@@ -1390,7 +1504,26 @@ async function saveGame() {
       return { player: p.name, pts: won ? 10 : 2, label: won ? `✅ Ganador (${teamLabel})` : `❌ Perdedor (${teamLabel})`, bonus: '' };
     });
   }
-  const gameNames = {kittens:'🐱 Exploding Kittens', saboteur:'⛏️ Saboteur', bahamas:'✈️ Bahamas', avalon:'🏰 Avalon', hitler:'🎭 Secret Hitler', codenames:'🔴 Código Secreto'};
+  } else if (game === 'contrarreloj') {
+    if (!crTeams) { showAlert(alertEl, 'Generá los equipos primero.', 'error'); return; }
+    const scoreA = parseInt(document.getElementById('cr-score-a').value) || 0;
+    const scoreB = parseInt(document.getElementById('cr-score-b').value) || 0;
+    const mvpA   = document.getElementById('cr-mvp-a').value;
+    const mvpB   = document.getElementById('cr-mvp-b').value;
+    const tie    = scoreA === scoreB;
+    const aWon   = !tie && scoreA > scoreB;
+    [...crTeams.a, ...crTeams.b].forEach(p => {
+      const inA    = crTeams.a.some(x => x.name === p.name);
+      const won    = tie ? null : (inA ? aWon : !aWon);
+      const base   = tie ? 5 : (won ? 8 : 3);
+      const isMvp  = p.name === mvpA || p.name === mvpB;
+      const pts    = base + (isMvp ? 2 : 0);
+      const team   = inA ? '⚡ Equipo A' : '🌊 Equipo B';
+      const label  = tie ? `🤝 Empate (${team})` : (won ? `🏆 Victoria (${team})` : `❌ Derrota (${team})`);
+      results.push({ player: p.name, pts, label, bonus: isMvp ? '+2 Mejor adivinador' : '' });
+    });
+  }
+  const gameNames = {kittens:'🐱 Exploding Kittens', saboteur:'⛏️ Saboteur', bahamas:'✈️ Bahamas', avalon:'🏰 Avalon', hitler:'🎭 Secret Hitler', codenames:'🔴 Código Secreto', contrarreloj:'⏱️ Contrarreloj'};
   try {
     const data = {
       game: gameNames[game], results,
