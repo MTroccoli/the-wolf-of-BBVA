@@ -285,7 +285,12 @@
 
     <!-- PASO 1: elegir cómo entrar -->
     <div id="login-step-choose">
-      <p style="font-size:13px;color:var(--muted);margin-bottom:20px">¿Cómo querés entrar?</p>
+      <div class="login-field" id="session-field" style="margin-bottom:20px">
+        <label>Sesión activa</label>
+        <select id="login-session">
+          <option value="">Cargando sesiones...</option>
+        </select>
+      </div>
       <button class="login-btn" onclick="showLoginForm()" style="margin-bottom:10px">
         🎮 JUGADOR / ADMIN
       </button>
@@ -305,12 +310,6 @@
         <label>Contraseña</label>
         <input type="password" id="login-pass" placeholder="••••••••" autocomplete="off"
                onkeydown="if(event.key==='Enter')doLogin()" />
-      </div>
-      <div class="login-field" id="session-field" style="display:none">
-        <label>Sesión</label>
-        <select id="login-session">
-          <option value="">Cargando sesiones...</option>
-        </select>
       </div>
       <button class="login-btn" onclick="doLogin()">ENTRAR A LA JORNADA</button>
       <button onclick="showChooseStep()" style="background:transparent;border:none;color:var(--muted);font-size:13px;cursor:pointer;margin-top:12px;width:100%;padding:6px">← Volver</button>
@@ -1162,8 +1161,9 @@ function showChooseStep() {
 window.showChooseStep = showChooseStep;
 
 async function enterAsVisitor() {
+  const sessionId = document.getElementById('login-session')?.value;
+  currentSession = sessions.find(s => s.id === sessionId) || null;
   currentUser = { name: 'Visitante', isAdmin: false, isVisitor: true };
-  currentSession = null;
   await fetchAll();
   bootApp();
 }
@@ -1923,15 +1923,12 @@ async function fetchSessions() {
 async function loadLoginSessions() {
   await fetchSessions();
   const active = sessions.filter(s => s.active);
-  const sel   = document.getElementById('login-session');
-  const field = document.getElementById('session-field');
-  if (!sel || !field) return;
+  const sel = document.getElementById('login-session');
+  if (!sel) return;
   if (active.length === 0) {
     sel.innerHTML = '<option value="">No hay sesiones activas</option>';
-    field.style.display = 'block';
   } else {
     sel.innerHTML = active.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
-    field.style.display = 'block';
   }
 }
 
