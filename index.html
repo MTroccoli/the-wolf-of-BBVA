@@ -1207,7 +1207,8 @@ function refreshUI() {
   if (id === 'ranking')   renderRanking();
   if (id === 'historial') renderHistory();
   if (id === 'admin')     renderAdmin();
-  // NO refrescar el formulario de partida automáticamente — el usuario puede estar cargando datos
+  // Cuando equipos ya están generados, actualizar sección "Sin asignar" con jugadores nuevos
+  if (id === 'partida' && crTeams) crRenderTeams();
   applyGameVisibility();
 }
 
@@ -1406,12 +1407,21 @@ function crGenerateTeams() {
 }
 
 function crRenderTeams() {
-  const btn = (name, from) => {
+  const moveBtn = (name, from) => {
     const to = from === 'a' ? 'B' : 'A';
     return `<button onclick="crMovePlayer('${name.replace(/'/g,"\\'")}','${from}')"
       title="Mover al Equipo ${to}"
       style="font-size:11px;padding:2px 8px;background:rgba(46,127,217,0.12);border:1px solid rgba(46,127,217,0.3);border-radius:6px;color:var(--accent);cursor:pointer;flex-shrink:0">→${to}</button>`;
   };
+  const addBtn = (name) =>
+    `<button onclick="crAddPlayer('${name.replace(/'/g,"\\'")}','a')" title="Agregar al Equipo A"
+      style="font-size:11px;padding:2px 8px;background:rgba(46,127,217,0.12);border:1px solid rgba(46,127,217,0.3);border-radius:6px;color:var(--accent);cursor:pointer;flex-shrink:0">→A</button>` +
+    `<button onclick="crAddPlayer('${name.replace(/'/g,"\\'")}','b')" title="Agregar al Equipo B"
+      style="font-size:11px;padding:2px 8px;background:rgba(0,196,204,0.1);border:1px solid rgba(0,196,204,0.3);border-radius:6px;color:var(--bbva-aqua);cursor:pointer;flex-shrink:0;margin-left:4px">→B</button>`;
+
+  const assignedNames = new Set([...crTeams.a, ...crTeams.b].map(p => p.name));
+  const unassigned = players.filter(p => !assignedNames.has(p.name));
+
   document.getElementById('cr-teams-display').innerHTML = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
       <div style="background:rgba(46,127,217,0.1);border:1px solid rgba(46,127,217,0.3);border-radius:10px;padding:12px">
@@ -1419,7 +1429,7 @@ function crRenderTeams() {
         ${crTeams.a.map(p => `
           <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;padding:4px 0">
             <span style="font-size:14px;font-weight:500">${p.name}</span>
-            ${btn(p.name,'a')}
+            ${moveBtn(p.name,'a')}
           </div>`).join('')}
       </div>
       <div style="background:rgba(0,196,204,0.08);border:1px solid rgba(0,196,204,0.3);border-radius:10px;padding:12px">
@@ -1427,16 +1437,32 @@ function crRenderTeams() {
         ${crTeams.b.map(p => `
           <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;padding:4px 0">
             <span style="font-size:14px;font-weight:500">${p.name}</span>
-            ${btn(p.name,'b')}
+            ${moveBtn(p.name,'b')}
           </div>`).join('')}
       </div>
     </div>
+    ${unassigned.length > 0 ? `
+    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:14px">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px">👤 Sin asignar</div>
+      ${unassigned.map(p => `
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;padding:4px 0">
+          <span style="font-size:14px;font-weight:500;color:var(--muted)">${p.name}</span>
+          <div>${addBtn(p.name)}</div>
+        </div>`).join('')}
+    </div>` : ''}
     <button class="btn" onclick="crGenerateTeams()" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--muted);margin-bottom:16px;width:100%">🔄 Revolver equipos</button>`;
 
   const mvpA = document.getElementById('cr-mvp-a');
   const mvpB = document.getElementById('cr-mvp-b');
   if (mvpA) mvpA.innerHTML = '<option value="">— Nadie destacado —</option>' + crTeams.a.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
   if (mvpB) mvpB.innerHTML = '<option value="">— Nadie destacado —</option>' + crTeams.b.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+}
+
+function crAddPlayer(name, toTeam) {
+  const player = players.find(p => p.name === name);
+  if (!player) return;
+  crTeams[toTeam].push(player);
+  crRenderTeams();
 }
 
 function crMovePlayer(name, fromTeam) {
@@ -1450,6 +1476,7 @@ function crMovePlayer(name, fromTeam) {
 }
 window.crGenerateTeams = crGenerateTeams;
 window.crMovePlayer    = crMovePlayer;
+window.crAddPlayer     = crAddPlayer;
 
 // ── SAVE GAME ──────────────────────────────────────────────────────────
 async function saveGame() {
