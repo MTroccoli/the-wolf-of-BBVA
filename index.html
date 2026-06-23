@@ -1401,16 +1401,34 @@ function crGenerateTeams() {
   const shuffled = [...selected].sort(() => Math.random() - 0.5);
   const mid = Math.ceil(shuffled.length / 2);
   crTeams = { a: shuffled.slice(0, mid), b: shuffled.slice(mid) };
+  crRenderTeams();
+  document.getElementById('cr-result-form').style.display = 'block';
+}
 
+function crRenderTeams() {
+  const btn = (name, from) => {
+    const to = from === 'a' ? 'B' : 'A';
+    return `<button onclick="crMovePlayer('${name.replace(/'/g,"\\'")}','${from}')"
+      title="Mover al Equipo ${to}"
+      style="font-size:11px;padding:2px 8px;background:rgba(46,127,217,0.12);border:1px solid rgba(46,127,217,0.3);border-radius:6px;color:var(--accent);cursor:pointer;flex-shrink:0">→${to}</button>`;
+  };
   document.getElementById('cr-teams-display').innerHTML = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
       <div style="background:rgba(46,127,217,0.1);border:1px solid rgba(46,127,217,0.3);border-radius:10px;padding:12px">
         <div style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:8px">⚡ Equipo A</div>
-        ${crTeams.a.map(p => `<div style="font-size:14px;font-weight:500;padding:3px 0">${p.name}</div>`).join('')}
+        ${crTeams.a.map(p => `
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;padding:4px 0">
+            <span style="font-size:14px;font-weight:500">${p.name}</span>
+            ${btn(p.name,'a')}
+          </div>`).join('')}
       </div>
       <div style="background:rgba(0,196,204,0.08);border:1px solid rgba(0,196,204,0.3);border-radius:10px;padding:12px">
         <div style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--bbva-aqua);margin-bottom:8px">🌊 Equipo B</div>
-        ${crTeams.b.map(p => `<div style="font-size:14px;font-weight:500;padding:3px 0">${p.name}</div>`).join('')}
+        ${crTeams.b.map(p => `
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;padding:4px 0">
+            <span style="font-size:14px;font-weight:500">${p.name}</span>
+            ${btn(p.name,'b')}
+          </div>`).join('')}
       </div>
     </div>
     <button class="btn" onclick="crGenerateTeams()" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--muted);margin-bottom:16px;width:100%">🔄 Revolver equipos</button>`;
@@ -1419,8 +1437,19 @@ function crGenerateTeams() {
   const mvpB = document.getElementById('cr-mvp-b');
   if (mvpA) mvpA.innerHTML = '<option value="">— Nadie destacado —</option>' + crTeams.a.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
   if (mvpB) mvpB.innerHTML = '<option value="">— Nadie destacado —</option>' + crTeams.b.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
-  document.getElementById('cr-result-form').style.display = 'block';
 }
+
+function crMovePlayer(name, fromTeam) {
+  const from = crTeams[fromTeam];
+  const toTeam = fromTeam === 'a' ? 'b' : 'a';
+  const idx = from.findIndex(p => p.name === name);
+  if (idx === -1) return;
+  const [player] = from.splice(idx, 1);
+  crTeams[toTeam].push(player);
+  crRenderTeams();
+}
+window.crGenerateTeams = crGenerateTeams;
+window.crMovePlayer    = crMovePlayer;
 
 // ── SAVE GAME ──────────────────────────────────────────────────────────
 async function saveGame() {
