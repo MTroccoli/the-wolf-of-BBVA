@@ -384,6 +384,7 @@
           <option value="hitler">🎭 Secret Hitler</option>
           <option value="codenames">🔴 Código Secreto</option>
           <option value="contrarreloj">⏱️ Contrarreloj</option>
+          <option value="hombreslobo">🐺 Hombres Lobo</option>
         </select>
       </div>
       <div id="game-form-area"></div>
@@ -442,6 +443,11 @@
         <div class="game-btn-icon">⏱️</div>
         <div class="game-btn-name">Contrarreloj</div>
         <div class="game-btn-sub">30 seg · Equipos</div>
+      </button>
+      <button class="game-btn" id="gbtn-hl" onclick="selectGame('hl')">
+        <div class="game-btn-icon">🐺</div>
+        <div class="game-btn-name">Hombres Lobo</div>
+        <div class="game-btn-sub">Pueblo vs Lobos</div>
       </button>
     </div>
 
@@ -890,6 +896,131 @@
       </div>
     </div>
 
+    <!-- HOMBRES LOBO -->
+    <div id="rules-hl" style="display:none">
+      <div class="accordion-item">
+        <button class="accordion-btn open" onclick="toggleAccordion('hl-obj')"><span>🎯 Objetivo y preparación</span><span class="accordion-arrow open" id="arrow-hl-obj">▼</span></button>
+        <div class="accordion-body" id="acc-hl-obj">
+          <div class="rules-section" style="margin-top:12px">
+            <p class="rules-text">El <strong>pueblo</strong> intenta descubrir y eliminar a los <strong>hombres lobo</strong> que acechan de noche. Los lobos intentan devorar a todos los aldeanos sin ser descubiertos. 8-18 jugadores, 30 minutos.</p>
+            <p class="rules-text" style="margin-top:8px">Un moderador (que no juega) reparte una carta de rol a cada jugador en secreto. Nadie revela su carta hasta morir o hasta que termine la partida.</p>
+            <div class="rules-table" style="margin-top:10px">
+              <div class="rules-table-row header"><span>Jugadores</span><span>Lobos</span><span>Pueblo</span></div>
+              <div class="rules-table-row"><span>8-11</span><span>2</span><span>Resto</span></div>
+              <div class="rules-table-row"><span>12-15</span><span>3</span><span>Resto</span></div>
+              <div class="rules-table-row"><span>16-18</span><span>4</span><span>Resto</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-btn" onclick="toggleAccordion('hl-play')"><span>🔄 Cómo se juega</span><span class="accordion-arrow" id="arrow-hl-play">▼</span></button>
+        <div class="accordion-body" id="acc-hl-play" style="display:none">
+          <div class="rules-section" style="margin-top:12px">
+            <div class="rules-section-title">🌙 Fase de Noche</div>
+            <p class="rules-text">Todos cierran los ojos. El moderador va llamando a cada rol en orden:</p>
+            <div class="card-list" style="margin-top:8px">
+              <div class="card-item"><span class="card-name">1. Ladrón</span><span class="card-desc">Solo la primera noche: puede intercambiar su carta con una de las sobrantes.</span></div>
+              <div class="card-item"><span class="card-name">2. Cupido</span><span class="card-desc">Solo la primera noche: elige a dos enamorados que se miran y reconocen.</span></div>
+              <div class="card-item"><span class="card-name">3. Vidente</span><span class="card-desc">Señala a un jugador y el moderador le muestra su carta en secreto.</span></div>
+              <div class="card-item"><span class="card-name">4. Zorro</span><span class="card-desc">Señala a un jugador: el moderador indica si hay un lobo entre ese jugador y sus vecinos.</span></div>
+              <div class="card-item"><span class="card-name">5. Hombres Lobo</span><span class="card-desc">Abren los ojos, se reconocen y eligen una víctima en silencio.</span></div>
+              <div class="card-item"><span class="card-name">6. Gran Lobo Malo</span><span class="card-desc">Puede elegir una segunda víctima (además de la elegida por los lobos).</span></div>
+              <div class="card-item"><span class="card-name">7. Bruja</span><span class="card-desc">El moderador le muestra la víctima. Puede usar su poción de vida o de muerte (una vez cada una).</span></div>
+              <div class="card-item"><span class="card-name">8. Defensor</span><span class="card-desc">Elige a un jugador para proteger esta noche (no puede repetir dos noches seguidas).</span></div>
+              <div class="card-item"><span class="card-name">9. Flautista</span><span class="card-desc">Encanta a 2 jugadores. Los encantados se reconocen entre sí pero no saben quién es el Flautista.</span></div>
+            </div>
+          </div>
+          <div class="rules-section" style="margin-top:14px">
+            <div class="rules-section-title">☀️ Fase de Día</div>
+            <p class="rules-text">Todos abren los ojos. El moderador anuncia quién murió durante la noche (el muerto revela su carta).</p>
+            <p class="rules-text" style="margin-top:8px">El pueblo debate quién puede ser lobo. Se vota a mano alzada para eliminar a un sospechoso. El eliminado revela su carta. Si el <strong>Cazador</strong> muere, se lleva a alguien consigo.</p>
+            <p class="rules-text" style="margin-top:8px">Luego vuelve a ser de noche y se repite el ciclo.</p>
+          </div>
+          <div class="rules-section" style="margin-top:14px">
+            <div class="rules-section-title">🏁 Fin de partida</div>
+            <p class="rules-text"><strong>Gana el Pueblo</strong> si eliminan a todos los lobos.</p>
+            <p class="rules-text" style="margin-top:4px"><strong>Ganan los Lobos</strong> si quedan igual o más lobos que aldeanos vivos.</p>
+            <p class="rules-text" style="margin-top:4px"><strong>Gana el Flautista</strong> si todos los jugadores vivos están encantados.</p>
+            <p class="rules-text" style="margin-top:4px"><strong>Gana el Ángel</strong> si logra ser eliminado en la primera ronda (día o noche).</p>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-btn" onclick="toggleAccordion('hl-roles')"><span>🎭 Roles del Pueblo</span><span class="accordion-arrow" id="arrow-hl-roles">▼</span></button>
+        <div class="accordion-body" id="acc-hl-roles" style="display:none">
+          <div class="card-list" style="margin-top:12px">
+            <div class="card-item"><span class="card-name">🏘️ Aldeano</span><span class="card-desc">Sin poder especial. Su única arma es la observación, el debate y el voto. La columna vertebral del pueblo.</span></div>
+            <div class="card-item"><span class="card-name">🔮 Vidente</span><span class="card-desc">Cada noche elige a un jugador y el moderador le muestra su carta en secreto. Debe guiar al pueblo sin revelarse demasiado o los lobos la cazarán.</span></div>
+            <div class="card-item"><span class="card-name">🧙 Bruja</span><span class="card-desc">Tiene 2 pociones de uso único en toda la partida: una de <strong>vida</strong> (salva a la víctima de los lobos) y una de <strong>muerte</strong> (mata a cualquier jugador). Puede usar ambas en la misma noche.</span></div>
+            <div class="card-item"><span class="card-name">🏹 Cazador</span><span class="card-desc">Cuando muere (de noche o de día), inmediatamente dispara y mata a otro jugador de su elección. Venganza post-mortem.</span></div>
+            <div class="card-item"><span class="card-name">💘 Cupido</span><span class="card-desc">La primera noche elige a 2 jugadores que quedan enamorados de por vida. Si uno muere, el otro muere de pena. Si un enamorado es lobo y el otro aldeano, su nueva condición de victoria es sobrevivir juntos (eliminando a todos los demás).</span></div>
+            <div class="card-item"><span class="card-name">👧 Niña</span><span class="card-desc">Puede espiar entreabriendo los ojos durante la fase de los lobos. Si los lobos la descubren mirando, muere en el acto en lugar de la víctima elegida.</span></div>
+            <div class="card-item"><span class="card-name">🛡️ Defensor</span><span class="card-desc">Cada noche elige a un jugador para proteger del ataque de los lobos. No puede proteger al mismo jugador dos noches seguidas. Puede protegerse a sí mismo.</span></div>
+            <div class="card-item"><span class="card-name">👴 Anciano</span><span class="card-desc">Sobrevive al primer ataque de los lobos (tiene 2 vidas contra lobos). Pero si el pueblo lo elimina por error en la votación, todos los roles especiales del pueblo pierden sus poderes como castigo.</span></div>
+            <div class="card-item"><span class="card-name">🦊 Zorro</span><span class="card-desc">Cada noche señala a un jugador. El moderador indica si hay al menos un lobo entre ese jugador y sus 2 vecinos inmediatos. Si no hay ningún lobo en ese grupo de 3, el Zorro pierde su poder permanentemente.</span></div>
+            <div class="card-item"><span class="card-name">👯 Dos Hermanas</span><span class="card-desc">Se conocen entre sí desde el inicio. La primera noche se miran y confirman su identidad. Pueden confiar plenamente la una en la otra.</span></div>
+            <div class="card-item"><span class="card-name">👨‍👦‍👦 Tres Hermanos</span><span class="card-desc">Se conocen entre sí desde el inicio. La primera noche se miran y confirman su identidad. Un bloque de confianza más fuerte.</span></div>
+            <div class="card-item"><span class="card-name">🐻 Oso Domador</span><span class="card-desc">Cada mañana, si un hombre lobo está sentado justo al lado del Oso Domador, el moderador dice "el oso gruñe". Si no gruñe, los vecinos inmediatos son inocentes.</span></div>
+            <div class="card-item"><span class="card-name">⚔️ Caballero Oxidado</span><span class="card-desc">Si los lobos lo devoran, el primer lobo a su izquierda muere envenenado por el óxido de su armadura la noche siguiente. Venganza silenciosa.</span></div>
+            <div class="card-item"><span class="card-name">🎭 Actor</span><span class="card-desc">Empieza la partida con 3 cartas de personaje al azar boca abajo. Cada noche puede activar una de ellas y usar su poder esa noche. Una vez usada, se descarta. Después de las 3, es un aldeano normal.</span></div>
+            <div class="card-item"><span class="card-name">🙏 Devota</span><span class="card-desc">Cuando un jugador es eliminado por el pueblo durante el día, la Devota puede revelar su carta y tomar el rol del jugador eliminado, sacrificando su identidad original.</span></div>
+            <div class="card-item"><span class="card-name">🎪 Chivo Expiatorio</span><span class="card-desc">Si la votación del pueblo termina en empate, el Chivo Expiatorio muere automáticamente en lugar de repetir la votación. Antes de morir, puede prohibir a uno o más jugadores votar al día siguiente.</span></div>
+            <div class="card-item"><span class="card-name">🎩 Alcalde</span><span class="card-desc">Su voto cuenta doble durante las votaciones del pueblo. Si muere, puede designar a un sucesor que hereda este poder. El Alcalde es elegido al inicio de la partida por votación.</span></div>
+            <div class="card-item"><span class="card-name">🕵️ Ladrón</span><span class="card-desc">Solo la primera noche: se colocan 2 cartas extra boca abajo en el centro. El Ladrón las mira y puede intercambiar su carta por una de ellas. Si ambas son lobos, está obligado a tomar una.</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-btn" onclick="toggleAccordion('hl-wolves')"><span>🐺 Roles de los Lobos</span><span class="accordion-arrow" id="arrow-hl-wolves">▼</span></button>
+        <div class="accordion-body" id="acc-hl-wolves" style="display:none">
+          <div class="card-list" style="margin-top:12px">
+            <div class="card-item"><span class="card-name">🐺 Hombre Lobo</span><span class="card-desc">Cada noche abre los ojos junto con los otros lobos. Se ponen de acuerdo en silencio para devorar a un aldeano. De día finge ser un inocente más del pueblo.</span></div>
+            <div class="card-item"><span class="card-name">🐺💀 Gran Lobo Malo</span><span class="card-desc">Actúa como un lobo normal durante la fase de lobos. Pero después, se despierta solo y puede elegir una <strong>segunda víctima</strong> adicional. Pierde este poder extra si muere cualquier otro lobo.</span></div>
+            <div class="card-item"><span class="card-name">🐺🦠 Infecto Padre de los Lobos</span><span class="card-desc">Una vez por partida, en lugar de devorar a la víctima, puede <strong>convertirla en lobo</strong>. La víctima se despierta como lobo a partir de la noche siguiente pero conserva su poder original.</span></div>
+            <div class="card-item"><span class="card-name">🐺⚪ Lobo Blanco</span><span class="card-desc">Juega con los lobos pero su objetivo es quedar <strong>completamente solo</strong>. Cada dos noches puede devorar a otro lobo además de la víctima del pueblo. Gana solo si es el último jugador vivo.</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-btn" onclick="toggleAccordion('hl-ambig')"><span>🌗 Roles Ambiguos</span><span class="accordion-arrow" id="arrow-hl-ambig">▼</span></button>
+        <div class="accordion-body" id="acc-hl-ambig" style="display:none">
+          <div class="card-list" style="margin-top:12px">
+            <div class="card-item"><span class="card-name">🎵 Flautista</span><span class="card-desc">Juega solo. Cada noche encanta a 2 jugadores. Los encantados se reconocen entre sí pero no saben quién los encanta. <strong>Gana si todos los jugadores vivos están encantados.</strong> No pertenece a ningún equipo. Si muere, los encantamientos permanecen.</span></div>
+            <div class="card-item"><span class="card-name">👼 Ángel</span><span class="card-desc">Su objetivo es morir en la primera ronda (primera noche o primer día). Si lo logra, <strong>gana solo y la partida termina</strong>. Si sobrevive la primera ronda, se convierte en un aldeano normal por el resto de la partida.</span></div>
+            <div class="card-item"><span class="card-name">🐕 Perro Lobo</span><span class="card-desc">La primera noche elige bando: abre los ojos con los lobos y se une a ellos, o se queda dormido y juega como aldeano. Una vez elegido, no puede cambiar.</span></div>
+            <div class="card-item"><span class="card-name">🧒 Lobo Salvaje</span><span class="card-desc">La primera noche elige un <strong>modelo a seguir</strong> (otro jugador). Mientras su modelo viva, juega como aldeano. Si su modelo muere, se convierte en hombre lobo y se une a la manada.</span></div>
+            <div class="card-item"><span class="card-name">🔮 Gitana</span><span class="card-desc">Usa cartas de espiritismo. Cada noche el moderador le muestra una carta de espiritismo que da una pista críptica sobre la identidad de los lobos o el estado de la partida.</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-btn" onclick="toggleAccordion('hl-pts')"><span>🏆 Puntos en la jornada</span><span class="accordion-arrow" id="arrow-hl-pts">▼</span></button>
+        <div class="accordion-body" id="acc-hl-pts" style="display:none">
+          <div style="margin-top:12px">
+            <div class="rule-row"><span>Equipo Ganador — Lobos devoran al pueblo</span><span class="rule-pts">12 PTS</span></div>
+            <div class="rule-row"><span>Equipo Ganador — Pueblo elimina a los lobos</span><span class="rule-pts">8 PTS</span></div>
+            <div class="rule-row"><span>Equipo Perdedor</span><span class="rule-pts">2 PTS</span></div>
+            <div class="rule-row"><span style="color:var(--green)">⚡ Bonus "Último Lobo": eras el último lobo vivo y sobreviviste hasta el final sin ser descubierto</span><span class="rule-pts" style="color:var(--green)">+2 PTS</span></div>
+            <div class="rule-row"><span style="color:var(--green)">⚡ Bonus "Ojo del Pueblo": como aldeano, señalaste correctamente a un lobo que fue eliminado</span><span class="rule-pts" style="color:var(--green)">+1 PT</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-btn" onclick="toggleAccordion('hl-faq')"><span>❓ FAQ</span><span class="accordion-arrow" id="arrow-hl-faq">▼</span></button>
+        <div class="accordion-body" id="acc-hl-faq" style="display:none">
+          <div class="faq-list" style="margin-top:12px">
+            <div class="faq-item"><div class="faq-q">¿Cuántos jugadores se necesitan?</div><div class="faq-a">Mínimo 8 para que sea divertido. Lo ideal es 10-15. Se necesita un moderador que no juega.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Qué pasa si Cupido une a un lobo con un aldeano?</div><div class="faq-a">Forman una pareja de enamorados con su propia condición de victoria: sobrevivir juntos eliminando a todos los demás (lobos y aldeanos).</div></div>
+            <div class="faq-item"><div class="faq-q">¿El Cazador puede disparar a cualquiera?</div><div class="faq-a">Sí, al morir elige a cualquier jugador vivo. Puede ser un lobo, un aldeano o incluso su enamorado.</div></div>
+            <div class="faq-item"><div class="faq-q">¿La Bruja puede salvarse a sí misma?</div><div class="faq-a">Depende de la variante. En la versión estándar, sí puede usar la poción de vida en sí misma si es la víctima de los lobos.</div></div>
+            <div class="faq-item"><div class="faq-q">¿El Flautista gana con los lobos?</div><div class="faq-a">No, el Flautista juega solo. Gana si todos los jugadores vivos quedan encantados, sin importar si son lobos o aldeanos.</div></div>
+            <div class="faq-item"><div class="faq-q">¿Qué roles se recomiendan para la primera partida?</div><div class="faq-a">Lobos + Vidente + Bruja + Cazador + Aldeanos. Simple y efectivo. Agregá Cupido y Niña después.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- PREGUNTAS DE JUGADORES -->
     <div class="card" style="margin-top:8px">
       <div class="card-title"><span>💬</span> Preguntas de jugadores</div>
@@ -974,6 +1105,7 @@ const GAMES = [
   { key: 'hitler',    label: '🎭 Secret Hitler',      rulesBtnId: 'gbtn-hitler',    faqName: null },
   { key: 'codenames',    label: '🔴 Código Secreto',  rulesBtnId: 'gbtn-codenames', faqName: null },
   { key: 'contrarreloj', label: '⏱️ Contrarreloj',   rulesBtnId: 'gbtn-cr',        faqName: null },
+  { key: 'hombreslobo', label: '🐺 Hombres Lobo',    rulesBtnId: 'gbtn-hl',        faqName: null },
 ];
 
 let currentUser = null;
@@ -1274,6 +1406,7 @@ function renderGameForm() {
   else if (game === 'hitler')        renderHitlerForm(area);
   else if (game === 'codenames')     renderCodenamesForm(area);
   else if (game === 'contrarreloj')  renderContrarrelojForm(area);
+  else if (game === 'hombreslobo')   renderHombresLoboForm(area);
 }
 window.renderGameForm = renderGameForm;
 
@@ -1452,6 +1585,32 @@ function crMovePlayer(name, fromTeam) {
 window.crGenerateTeams = crGenerateTeams;
 window.crMovePlayer    = crMovePlayer;
 
+function renderHombresLoboForm(area) {
+  area.innerHTML = `
+    <div class="section-label" style="margin-top:0">Resultado</div>
+    <div style="margin-bottom:14px">
+      <div class="form-label">¿Quién ganó?</div>
+      <select id="hl-winner">
+        <option value="lobos">🐺 Los Lobos ganaron</option>
+        <option value="pueblo">🏘️ El Pueblo ganó</option>
+      </select>
+    </div>
+    <div class="section-label">Rol de cada jugador</div>
+    ${players.map((p,i) => `
+      <div class="player-position-row">
+        <div class="player-pos-name">${p.name}</div>
+        <select class="pos-select" id="hl-rol-${i}">
+          <option value="no" selected>❌ No participa</option>
+          <option value="pueblo">🏘️ Pueblo</option>
+          <option value="lobo">🐺 Lobo</option>
+        </select>
+        <label class="bonus-label"><input type="checkbox" id="hl-bonus-${i}"> <span>Bonus</span></label>
+      </div>`).join('')}
+    <div style="margin-top:8px;background:rgba(41,217,133,0.08);border:1px solid rgba(41,217,133,0.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--muted)">
+      ⚡ <strong style="color:var(--text)">Bonus:</strong> Marcá "Bonus" para el lobo si fue el último lobo sin ser descubierto (+2 pts), o para un aldeano que señaló correctamente a un lobo (+1 pt).
+    </div>`;
+}
+
 // ── SAVE GAME ──────────────────────────────────────────────────────────
 async function saveGame() {
   const game    = document.getElementById('game-select').value;
@@ -1574,8 +1733,23 @@ async function saveGame() {
       const label  = tie ? `🤝 Empate (${team})` : (won ? `🏆 Victoria (${team})` : `❌ Derrota (${team})`);
       results.push({ player: p.name, pts, label, bonus: isMvp ? '+2 Mejor adivinador' : '' });
     });
+  } else if (game === 'hombreslobo') {
+    const winner = document.getElementById('hl-winner').value;
+    results = players.map((p,i) => {
+      const rol   = document.getElementById('hl-rol-'+i).value;
+      if (rol === 'no') return { player: p.name, pts: 0, label: '— No participó', bonus: '' };
+      const bonus = document.getElementById('hl-bonus-'+i)?.checked;
+      const isLobo   = rol === 'lobo';
+      const isPueblo = rol === 'pueblo';
+      const won = (winner==='lobos'&&isLobo)||(winner==='pueblo'&&isPueblo);
+      const base = won ? (winner==='lobos' ? 12 : 8) : 2;
+      const bonusPts = bonus ? (isLobo ? 2 : 1) : 0;
+      const bonusLabel = bonus ? (isLobo ? '+2 Último Lobo' : '+1 Ojo del Pueblo') : '';
+      const rolLabel = isLobo ? '🐺 Lobo' : '🏘️ Pueblo';
+      return { player: p.name, pts: base+bonusPts, label: won?`✅ Ganador (${rolLabel})`:`❌ Perdedor (${rolLabel})`, bonus: bonusLabel };
+    });
   }
-  const gameNames = {kittens:'🐱 Exploding Kittens', saboteur:'⛏️ Saboteur', bahamas:'✈️ Bahamas', avalon:'🏰 Avalon', hitler:'🎭 Secret Hitler', codenames:'🔴 Código Secreto', contrarreloj:'⏱️ Contrarreloj'};
+  const gameNames = {kittens:'🐱 Exploding Kittens', saboteur:'⛏️ Saboteur', bahamas:'✈️ Bahamas', avalon:'🏰 Avalon', hitler:'🎭 Secret Hitler', codenames:'🔴 Código Secreto', contrarreloj:'⏱️ Contrarreloj', hombreslobo:'🐺 Hombres Lobo'};
   try {
     const data = {
       game: gameNames[game], results,
@@ -1629,6 +1803,11 @@ function getResultEmoji(gameName, label) {
     if (label.includes('Ganador')) return '🏆';
     if (label.includes('Sobreviviente')) return '🪂';
     return '💥';
+  }
+  if (gameName.includes('Hombres Lobo')) {
+    if (label.includes('Ganador') && label.includes('Lobo')) return '🐺';
+    if (label.includes('Ganador') && label.includes('Pueblo')) return '🏘️';
+    return '❌';
   }
   return '';
 }
@@ -2121,7 +2300,7 @@ window.toggleAccordion = toggleAccordion;
 
 // ── GAME SELECTOR ──────────────────────────────────────────────────────
 function selectGame(id) {
-  ['ek','sab','bah','avalon','hitler','codenames','cr'].forEach(g => {
+  ['ek','sab','bah','avalon','hitler','codenames','cr','hl'].forEach(g => {
     const rules = document.getElementById('rules-' + g);
     const btn   = document.getElementById('gbtn-' + g);
     if (rules) rules.style.display = g === id ? 'block' : 'none';
